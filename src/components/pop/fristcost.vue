@@ -32,12 +32,23 @@ export default {
   data() {
     return {
       msg: "第一次全文查重",
-      balance: 10000,
-      allNumberWords: 3600,
-      robotWords: 3600,
+      balance: null,
+      allNumberWords: null,
+      robotWords: null,
       select: "icon-select-input",
       show: true
     };
+  },
+  mounted: function() {
+    this.$http
+      .get(
+        "https://www.easy-mock.com/mock/59ffd36ca3412760ce85ee97/example/wpstest01"
+      )
+      .then(res => {
+        this.balance = res.data.balance;
+        this.allNumberWords = res.data.allNumberWords;
+        this.robotWords = res.data.robotWords;
+      });
   },
   props: {
     panelShow: {
