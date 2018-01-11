@@ -55,10 +55,15 @@ body {
 html {
   overflow: hidden;
 }
-
 body {
   overflow: auto;
   width: calc(100vw + 20px);
+}
+li{
+  list-style: none;
+}
+a{
+  text-decoration: none;
 }
 #app {
   font-family: "微软雅黑";
@@ -102,6 +107,26 @@ body {
   height: 14px;
   background: url(./assets/icon.png)no-repeat;
   background-position: -95px -129px;
+}
+.icon-disable-input{
+  width: 16px;
+  height: 16px;
+    background: url(./assets/icon.png)no-repeat;
+  background-position: -253px -128px;
+}
+.icon-select-input{
+  width: 16px;
+  height: 16px;
+    background: url(./assets/icon.png)no-repeat;
+  background-position: -205px -128px;
+  cursor: pointer;
+}
+.icon-input{
+  width: 16px;
+  height: 16px;
+    background: url(./assets/icon.png)no-repeat;
+  background-position: -149px -128px;
+  cursor: pointer;
 }
 .content {
   margin: 0 20px;

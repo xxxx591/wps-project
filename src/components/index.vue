@@ -17,15 +17,17 @@
     </div>
     <div>
       <p class="remind-title"><i class="icon icon-remind"></i>对于新用户，系统赠送10000字免费体验。</p>
-      <div class="btn">
+      <div class="btn" @click="showbox">
         开始全文查重
       </div>
     </div>
+    <frist-cost :panelShow.sync="panelShow" v-if="panelShow"></frist-cost>
   </div>
 </template>
 
 <script>
 import logo from "@/components/logo/logo";
+import fristCost from "@/components/pop/fristcost";
 export default {
   name: "HelloWorld",
   data() {
@@ -46,11 +48,18 @@ export default {
           title: "在线改重+实时查重",
           content: "边修改边检测，哪里相似，修改哪里，通过 哪里，每次实时查重只对当前修改的句子计费。"
         }
-      ]
+      ],
+      panelShow: false
     };
   },
   components: {
-    logo
+    logo,
+    fristCost
+  },
+  methods: {
+    showbox() {
+      this.panelShow = true;
+    }
   }
 };
 </script>
@@ -86,9 +95,9 @@ export default {
   margin-top: 90px;
   text-align: center;
   font-size: 20px;
-  line-height:36px;
+  line-height: 36px;
   height: 36px;
-  background: #50B379;
+  background: #50b379;
   border-radius: 4px;
   color: #fff;
   font-weight: 600;
