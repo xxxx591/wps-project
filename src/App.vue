@@ -59,10 +59,10 @@ body {
   overflow: auto;
   width: calc(100vw + 20px);
 }
-li{
+li {
   list-style: none;
 }
-a{
+a {
   text-decoration: none;
 }
 #app {
@@ -108,25 +108,31 @@ a{
   background: url(./assets/icon.png)no-repeat;
   background-position: -95px -129px;
 }
-.icon-disable-input{
+.icon-disable-input {
   width: 16px;
   height: 16px;
-    background: url(./assets/icon.png)no-repeat;
+  background: url(./assets/icon.png)no-repeat;
   background-position: -253px -128px;
 }
-.icon-select-input{
+.icon-select-input {
   width: 16px;
   height: 16px;
-    background: url(./assets/icon.png)no-repeat;
+  background: url(./assets/icon.png)no-repeat;
   background-position: -205px -128px;
   cursor: pointer;
 }
-.icon-input{
+.icon-input {
   width: 16px;
   height: 16px;
-    background: url(./assets/icon.png)no-repeat;
+  background: url(./assets/icon.png)no-repeat;
   background-position: -149px -128px;
   cursor: pointer;
+}
+.icon-loading {
+  width: 132px;
+  height: 142px;
+  background: url(./assets/loading.png)no-repeat;
+  position: relative;
 }
 .content {
   margin: 0 20px;
@@ -141,5 +147,4 @@ a{
   height: 55px;
   background: orangered;
 }
-
 </style>
