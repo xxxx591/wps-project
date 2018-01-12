@@ -7,14 +7,11 @@
 .logo {
   height: 48px;
   width: 100%;
-  position: relative;
   padding-bottom: 15px;
   border-bottom: 1px solid #ECECEC;
 }
 .logo span {
   display: inline-block;
-  position: absolute;
-  top: 0;
   font-size: 14px;
   cursor: pointer;
 }

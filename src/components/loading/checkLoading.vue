@@ -13,7 +13,7 @@
       </div>
       <p class="progress-title01">0%</p>
       <h2 class="progress-title02">正在拼命检测中...请稍等片刻</h2>
-      <ul v-for="item in listItem" :key="item.index">
+      <ul v-for="item in checkList" :key="item.index">
         <li>{{item.content}}</li>
       </ul>
     </div>
@@ -33,11 +33,11 @@ export default {
         { content: "全文查重完成后，可以对相似度高的红色句子进行机器人降重。" },
         { content: "修改几句就可以点击论文助手顶部的实时查重，立刻同步查重结果。" }
       ],
-      checkList:[
-        {content:'实时查重时间：通常情况下，30秒以内可以出结果，修改的句子越多，则可能需要更长的时间。'},
-        {content:'关闭文档或者电脑不会影响检测。'},
-        {content:'实时查重完成后，可以对相似度高的红色句子进行机器人降重。'},
-        ]
+      checkList: [
+        { content: "实时查重时间：通常情况下，30秒以内可以出结果，修改的句子越多，则可能需要更长的时间。" },
+        { content: "关闭文档或者电脑不会影响检测。" },
+        { content: "实时查重完成后，可以对相似度高的红色句子进行机器人降重。" }
+      ]
     };
   },
   mounted: function() {
