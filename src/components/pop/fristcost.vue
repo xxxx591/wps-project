@@ -83,7 +83,6 @@ export default {
   left: 50%;
   margin-left: -362.5px;
   margin-top: -250px;
-  border: 1px solid black;
   background: #fff;
   color: #888;
 }
