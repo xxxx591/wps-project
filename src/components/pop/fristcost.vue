@@ -20,10 +20,8 @@
       <div class="boder-solid"></div>
       <p class="green-content">(温馨提示:在线改重+实时查重是根据使用时修改的句子扣费）</p>
       <div class="btn-box">
-        <form action="api/full/submit.html" method="get" id="form">
-          <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
-          <a href="javascript:;" class="btn btn-success" @click="submit">确定</a>
-        </form>
+        <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
+        <a href="javascript:;" class="btn btn-success" @click="submit">确定</a>
       </div>
     </div>
   </div>
@@ -40,8 +38,16 @@ export default {
       robotWords: null,
       select: "icon-select-input",
       show: true,
-      auto:0
+      auto: 1
     };
+  },
+  props: {
+    panelShow: {
+      type: Boolean
+    },
+    userId: {
+      type: String
+    }
   },
   mounted: function() {
     this.$http
@@ -61,16 +67,9 @@ export default {
         } else if (res.data.status == "success") {
           this.balance = res.data.balance;
           this.allNumberWords = res.data.wordCount;
+          this.robotWords = res.data.wordCount;
         }
       });
-  },
-  props: {
-    panelShow: {
-      type: Boolean
-    },
-    userId: {
-      type: String
-    }
   },
   methods: {
     change() {
@@ -89,15 +88,18 @@ export default {
       this.$emit("update:panelShow", false);
     },
     submit() {
+      var that = this 
       this.$http
         .get("api/v1/check/full/submit.html", {
-          data: {
-            userId:this.userId,
-            auto:this.auto
+          params: {
+            userId: this.userId,
+            auto: this.auto
           }
         })
         .then(function(res) {
-          console.log(res);
+          if (res.data.status == "success") {
+            that.$emit('submitChange','this message')
+          }
         });
     }
   }

@@ -22,7 +22,7 @@
       </div>
       <router-link to="/" class="history">历史记录</router-link>
     </div>
-    <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId"></frist-cost>
+    <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" v-on:submitChange="submitChange"></frist-cost>
   </div>
 </template>
 
@@ -64,6 +64,9 @@ export default {
   methods: {
     showbox() {
       this.panelShow = true;
+    },
+    submitChange(data){
+      console.log(data);
     }
   }
 };
