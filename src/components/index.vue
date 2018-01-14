@@ -22,7 +22,7 @@
       </div>
       <router-link to="/" class="history">历史记录</router-link>
     </div>
-    <frist-cost :panelShow.sync="panelShow" v-if="panelShow"></frist-cost>
+    <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId"></frist-cost>
   </div>
 </template>
 
@@ -50,8 +50,12 @@ export default {
           content: "边修改边检测，哪里相似，修改哪里，通过 哪里，每次实时查重只对当前修改的句子计费。"
         }
       ],
-      panelShow: false
+      panelShow: false,
+      userId:'',
     };
+  },
+  mounted: function() {
+    this.userId = this.$route.query.userid
   },
   components: {
     logo,

@@ -20,7 +20,7 @@
 </style>
 <script>
 export default {
-  name: "menu",
+  name: "logotab",
   data() {
     return {
       balance: 1234

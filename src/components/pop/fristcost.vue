@@ -14,13 +14,16 @@
             <li><i class="icon" @click="change" :class="select"></i>机器人降重<span class="right-content red-content">{{robotWords}}<span style="color:#888;">字</span></span></li>
           </ul>
         </div>
-        <p class="remind-content"><i class="icon icon-remind"></i> 此次提交扣费<span class="red-content">{{allNumberWords+robotWords}}</span>字，您的余额<span class="red-content">{{balance}}</span>字。</p>
+        <p class="remind-content" v-if="show"><i class="icon icon-remind"></i> 此次提交扣费<span class="red-content">{{allNumberWords+robotWords}}</span>字，您的余额<span class="red-content">{{balance}}</span>字。</p>
+        <p class="remind-content" v-else><i class="icon icon-remind"></i> <span class="red-content">{{msg}}</span></p>
       </div>
       <div class="boder-solid"></div>
       <p class="green-content">(温馨提示:在线改重+实时查重是根据使用时修改的句子扣费）</p>
       <div class="btn-box">
-        <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
-        <a href="javascript:;" class="btn btn-success">确定</a>
+        <form action="api/full/submit.html" method="get" id="form">
+          <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
+          <a href="javascript:;" class="btn btn-success" @click="submit">确定</a>
+        </form>
       </div>
     </div>
   </div>
@@ -36,23 +39,37 @@ export default {
       allNumberWords: null,
       robotWords: null,
       select: "icon-select-input",
-      show: true
+      show: true,
+      auto:0
     };
   },
   mounted: function() {
     this.$http
-      .get(
-        "https://www.easy-mock.com/mock/59ffd36ca3412760ce85ee97/example/wpstest01"
-      )
+      .get("api/v1/check/full/init.html", {
+        params: {
+          userId: this.userId,
+          title: "xin",
+          editorTxt:
+            "涵盖所有中英文类别，包括哲学、经济学、管理学、法学、社会科学、教育学、文学、艺术学、历史学、理学、工学、农学、医学、政治学、军事学等。"
+        }
+      })
       .then(res => {
-        this.balance = res.data.balance;
-        this.allNumberWords = res.data.allNumberWords;
-        this.robotWords = res.data.robotWords;
+        console.log(res);
+        if (res.data.status == "fail") {
+          this.msg = "论文内容为空, 不能全文查重";
+          this.show = false;
+        } else if (res.data.status == "success") {
+          this.balance = res.data.balance;
+          this.allNumberWords = res.data.wordCount;
+        }
       });
   },
   props: {
     panelShow: {
       type: Boolean
+    },
+    userId: {
+      type: String
     }
   },
   methods: {
@@ -60,14 +77,28 @@ export default {
       if (this.select == "icon-select-input") {
         this.select = "icon-input";
         this.robotWords = 0;
+        this.auto = 0;
       } else {
         this.select = "icon-select-input";
         this.robotWords = this.allNumberWords;
+        this.auto = 1;
       }
     },
     hidePanel() {
       // 下面的语句配合开头写的 .sync 就会更新父组件中的 panelShow 变量
       this.$emit("update:panelShow", false);
+    },
+    submit() {
+      this.$http
+        .get("api/v1/check/full/submit.html", {
+          data: {
+            userId:this.userId,
+            auto:this.auto
+          }
+        })
+        .then(function(res) {
+          console.log(res);
+        });
     }
   }
 };
