@@ -1,18 +1,22 @@
 <template>
   <div class="hello">
-   {{msg}}
+   <Menu></Menu>
   </div>
 </template>
 
 <script>
+import Menu from '@/components/logo/menu'
 export default {
-  name: 'HelloWorld',
-  data () {
+  name: "viewReport",
+  data() {
     return {
-      msg: '已查看结果'
-    }
+      msg: "你好啊",
+    };
+  },
+  components:{
+    Menu,
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
