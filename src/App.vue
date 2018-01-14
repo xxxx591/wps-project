@@ -3,9 +3,9 @@
       <div class="content">
         <router-view/>
       </div>
-      <div class="foot">
+      <!-- <div class="foot">
 
-      </div>
+      </div> -->
   </div>
 </template>
 

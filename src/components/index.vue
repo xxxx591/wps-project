@@ -20,6 +20,7 @@
       <div class="btn" @click="showbox">
         开始全文查重
       </div>
+      <router-link to="/" class="history">历史记录</router-link>
     </div>
     <frist-cost :panelShow.sync="panelShow" v-if="panelShow"></frist-cost>
   </div>
@@ -102,5 +103,11 @@ export default {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+}
+.history{
+  display: block;
+  text-align: center;
+  color: #3479D4;
+  text-decoration: underline;
 }
 </style>
