@@ -76,7 +76,7 @@ a {
 .icon {
   display: inline-block;
   background: red;
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 .icon-check {
   width: 34px;
@@ -107,6 +107,12 @@ a {
   height: 14px;
   background: url(./assets/icon.png)no-repeat;
   background-position: -95px -129px;
+}
+.icon-refresh {
+  width: 12px;
+  height: 12px;
+  background: url(./assets/icon.png)no-repeat;
+  background-position: -263px -280px;
 }
 .icon-disable-input {
   width: 16px;

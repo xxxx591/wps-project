@@ -1,11 +1,11 @@
 <template>
   <div class="hello">
-   <Menu></Menu>
+    <logo-tab></logo-tab>
   </div>
 </template>
 
 <script>
-import Menu from '@/components/logo/menu'
+import logoTab from '@/components/logo/logoTab'
 export default {
   name: "viewReport",
   data() {
@@ -14,7 +14,7 @@ export default {
     };
   },
   components:{
-    Menu,
+    logoTab,
   }
 };
 </script>
