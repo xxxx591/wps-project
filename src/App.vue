@@ -105,6 +105,18 @@ a {
   background: url(./assets/icon.png)no-repeat;
   background-position: -43px -128px;
 }
+.icon-download {
+  width: 12px;
+  height: 12px;
+  background: url(./assets/icon.png)no-repeat;
+  background-position: -315px -280px;
+}
+.icon-qq {
+  width: 14px;
+  height: 14px;
+  background: url(./assets/icon.png)no-repeat;
+  background-position: -367px -279px;
+}
 .icon-remind {
   width: 13px;
   height: 14px;

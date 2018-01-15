@@ -1,18 +1,88 @@
 <template>
   <div>
-      {{msg}}
+      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
+      <div class="full-content">
+          <p class="full-p">
+              <span>总相似度</span>
+              <span class="content-right">机器人降重</span>
+          </p>
+          <div class="full-div">
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+          </div>
+      </div>
   </div>
 </template>
 <script>
+import logoTab from "@/components/logo/logoTab";
 export default {
   name: "fullTxt",
   data() {
     return {
-      msg: "全文标红区"
+      msg: "全文标红区",
+      userId: null,
+      docCheckId: null,
+      balance: null
     };
+  },
+  components: {
+    logoTab
+  },
+  mounted: function() {
+    this.userId = this.$route.query.userid;
+    this.docCheckId = this.$route.query.docCheckId;
+    var that = this;
+    this.$http
+      .get("api/v1/paper/index.html", {
+        params: {
+          userId: this.$route.query.userid,
+          docCheckId: this.$route.query.docCheckId
+        }
+      })
+      .then(function(res) {
+        that.balance = res.data.balance;
+      });
+  },
+  updated: function() {},
+  methods: {
+    returnChange(data) {
+      console.log(data);
+      this.$router.go(-1);
+    }
   }
 };
 </script>
-<style>
-
+<style scoped>
+.full-p {
+  padding: 0 5px;
+}
+.full-p span {
+  display: inline-block;
+  height: 14px;
+  margin: 11px 0 14px 0;
+}
+.content-right {
+  float: right;
+  background: #f1f1f2;
+}
+.full-div {
+  font-size: 12px;
+  line-height: 18px;
+  text-indent: 24px;
+}
+.red {
+  color: red;
+  cursor: pointer;
+}
+.yellow {
+  color: #fcb903;
+  cursor: pointer;
+}
 </style>
