@@ -97,8 +97,9 @@ export default {
           }
         })
         .then(function(res) {
+          console.log(res);
           if (res.data.status == "success") {
-            that.$emit('submitChange','this message')
+            that.$emit('submitChange',res.data.docCheckId)
           }
         });
     }

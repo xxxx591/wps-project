@@ -35,8 +35,9 @@ export default {
             query: { userid: this.userid }
           });
         } else if (res.data.fullCheck == "1") {
+          console.log(this.$router);
           this.$router.push({
-            path: "/loading",
+            path: "/viewReport",
             query: { userid: this.userid }
           });
         }

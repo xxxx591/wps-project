@@ -51,11 +51,11 @@ export default {
         }
       ],
       panelShow: false,
-      userId:'',
+      userId: ""
     };
   },
   mounted: function() {
-    this.userId = this.$route.query.userid
+    this.userId = this.$route.query.userid;
   },
   components: {
     logo,
@@ -64,9 +64,13 @@ export default {
   methods: {
     showbox() {
       this.panelShow = true;
+      console.log(this.userId);
     },
-    submitChange(data){
-      console.log(data);
+    submitChange(data) {
+      this.$router.push({
+        path: "/loading",
+        query: { userid: this.userId ,docCheckId:data}
+      });
     }
   }
 };
@@ -111,10 +115,10 @@ export default {
   font-weight: 600;
   cursor: pointer;
 }
-.history{
+.history {
   display: block;
   text-align: center;
-  color: #3479D4;
+  color: #3479d4;
   text-decoration: underline;
 }
 </style>
