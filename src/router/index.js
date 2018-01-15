@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import allCheck from '@/components/index'
+import allCheck from '@/components/allCheck'
 import loading from '@/components/loading'
 import viewReport from '@/components/viewReport'
 
