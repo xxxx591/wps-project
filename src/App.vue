@@ -27,10 +27,16 @@ export default {
         }
       })
       .then(res => {
+        console.log(res);
         this.userid = res.data.userId;
         if (res.data.fullCheck == "0") {
           this.$router.push({
             path: "/allCheck",
+            query: { userid: this.userid }
+          });
+        } else if (res.data.fullCheck == "1") {
+          this.$router.push({
+            path: "/loading",
             query: { userid: this.userid }
           });
         }
