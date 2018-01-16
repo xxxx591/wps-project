@@ -49,6 +49,7 @@ export default {
       })
       .then(function(res) {
         that.listItem = res.data.list;
+        that.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
       });
   },
   methods: {
@@ -107,25 +108,25 @@ export default {
 #list-heard {
   text-align: left;
   font-weight: 600;
-  border-bottom: 1px solid #ededed;
-  height: 30px;
-  line-height: 30px;
+  border-bottom: 0.1rem solid #ededed;
+  height: 3rem;
+  line-height: 3rem;
 }
 #list-heard span {
   display: inline-block;
   width: 32%;
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 .list-content {
-  height: 28px;
-  line-height: 28px;
-  padding: 5px 0;
-  border-bottom: 1px solid #ededed;
+  height: 2.8rem;
+  line-height: 2.8rem;
+  padding: 0.5rem 0;
+  border-bottom: 0.1rem solid #ededed;
 }
 .list-content span {
   display: inline-block;
   width: 32%;
-  font-size: 12px;
+  font-size: 1.2rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -135,23 +136,23 @@ export default {
   outline: none;
   background: #3479d4;
   color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
   cursor: pointer;
 }
 .paging {
   font-weight: 600;
-  padding: 10px;
-  height: 26px;
-  line-height: 26px;
+  padding: 1rem;
+  height: 2.6rem;
+  line-height: 2.6rem;
 }
 .paging span {
   float: right;
   background: #3479d4;
   cursor: pointer;
   color: #fff;
-  margin-right: 10px;
-  padding: 0 5px;
-  border-radius: 4px;
+  margin-right: 1rem;
+  padding: 0 0.5rem;
+  border-radius: 0.4rem;
 }
 </style>

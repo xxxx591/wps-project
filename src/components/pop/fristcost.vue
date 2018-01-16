@@ -88,7 +88,7 @@ export default {
       this.$emit("update:panelShow", false);
     },
     submit() {
-      var that = this 
+      var that = this;
       this.$http
         .get("api/v1/check/full/submit.html", {
           params: {
@@ -99,7 +99,7 @@ export default {
         .then(function(res) {
           console.log(res);
           if (res.data.status == "success") {
-            that.$emit('submitChange',res.data.docCheckId)
+            that.$emit("submitChange", res.data.docCheckId);
           }
         });
     }
@@ -110,32 +110,35 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 .cost-box {
-  width: 785px;
-  height: 500px;
+  width: 78.33rem;
+  height: 48.33rem;
   position: fixed;
   top: 50%;
   left: 50%;
-  margin-left: -362.5px;
-  margin-top: -250px;
-  background: #fff;
-  color: #888;
+  margin-left: -39.165rem;
+  margin-top: -24.165rem;
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  color: #888888;
+  letter-spacing: 0.42px;
+  font-family: MicrosoftYaHei;
 }
 .cost-box h3 {
   text-align: center;
-  font-size: 20px;
-  padding: 19px 0;
+  font-size: 1.67rem;
+  padding: 1.58rem 0;
   border-bottom: 1px solid #888;
-  margin: 0 20px;
+  margin: 0 1.67rem;
   font-weight: 500;
 }
 .cost-content {
-  width: 308px;
-  height: 300px;
+  width: 25.6rem;
+  height: 25rem;
   margin: 0 auto;
 }
 .balance {
-  margin: 50px 0 40px;
-  font-size: 14px;
+  margin: 4.17rem 0 3.33rem;
+  font-size: 1.16rem;
 }
 .right-content {
   float: right;
@@ -147,34 +150,34 @@ export default {
   clear: both;
 }
 .cost-list ul li {
-  font-size: 14px;
-  margin-bottom: 40px;
-  letter-spacing: 0.5px;
+  font-size: 1.16rem;
+  margin-bottom: 3.33rem;
+  letter-spacing: 0.5rem;
 }
 .remind-content {
-  font-size: 14px;
-  margin-bottom: 65px;
+  font-size: 1.16rem;
+  margin-bottom: 5.42rem;
 }
 .boder-solid {
-  margin: 0 20px;
+  margin: 0 1.67rem;
   border-bottom: 1px solid #888;
 }
 .green-content {
   color: #03802c;
-  margin: 0 20px;
+  margin: 0 1.67rem;
 }
 .btn-box {
   text-align: right;
-  margin: 0 20px;
+  margin: 0 1.67rem;
 }
 .btn-box .btn {
   text-align: center;
   display: inline-block;
-  width: 148px;
-  height: 36px;
-  border-radius: 4px;
-  line-height: 36px;
-  font-size: 20px;
+  width: 12.33rem;
+  height: 3rem;
+  border-radius: .3rem;
+  line-height: 3rem;
+  font-size: 1.67rem;
 }
 .btn-box .btn-cancel {
   border: 1px solid #888;
@@ -185,6 +188,6 @@ export default {
   background: #03802c;
   border: 1px solid #03802c;
   color: #fff;
-  margin-left: 10px;
+  margin-left: .83rem;
 }
 </style>

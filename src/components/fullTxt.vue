@@ -61,21 +61,21 @@ export default {
 </script>
 <style scoped>
 .full-p {
-  padding: 0 5px;
+  padding: 0 .5rem;
 }
 .full-p span {
   display: inline-block;
-  height: 14px;
-  margin: 11px 0 14px 0;
+  height: 1.4rem;
+  margin: 1.1rem 0 1.4rem 0;
 }
 .content-right {
   float: right;
   background: #f1f1f2;
 }
 .full-div {
-  font-size: 12px;
-  line-height: 18px;
-  text-indent: 24px;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  text-indent: 2.4rem;
 }
 .red {
   color: red;

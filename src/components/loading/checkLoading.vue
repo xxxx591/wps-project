@@ -13,7 +13,7 @@
       </div>
       <p class="progress-title01">0%</p>
       <h2 class="progress-title02">正在拼命检测中...请稍等片刻</h2>
-      <ul v-for="item in checkList" :key="item.index">
+      <ul >
         <li>{{item.content}}</li>
       </ul>
     </div>
@@ -62,18 +62,18 @@ export default {
 <style scoped>
 .hello {
   text-align: center;
-  margin: 77px 20px 62px;
+  margin: 7.7rem 2.0rem 6.2rem;
 }
 .pointer {
   position: absolute;
-  height: 45px;
-  border: 4px solid #999;
+  height: 4.5rem;
+  border: .4rem solid #999;
   top: 50%;
-  margin-top: -45px;
+  margin-top: -4.5rem;
   left: 50%;
-  margin-left: -4px;
+  margin-left: -.4rem;
   transform: rotate(0deg);
-  transform-origin: 4px 50px;
+  transform-origin: .4rem 5.0rem;
   transition: all 0.5s linear;
 }
 .progress-box {
@@ -81,34 +81,34 @@ export default {
   color: #222226;
 }
 .progress {
-  height: 4px;
-  margin: 0 20px;
+  height: .4rem;
+  margin: 0 2.0rem;
   background: #e6e6e6;
   position: relative;
-  border-radius: 2px;
-  margin-bottom: 6px;
+  border-radius: .2rem;
+  margin-bottom: .6rem;
 }
 .progress-green {
-  height: 4px;
+  height: .4rem;
   background: #50b379;
-  border-radius: 2px;
+  border-radius: .2rem;
   position: absolute;
   top: 0;
   z-index: 100;
 }
 .progress-title01 {
-  margin-bottom: 18px;
+  margin-bottom: 1.8rem;
 }
 .progress-title02 {
-  padding: 0 20px 42px;
-  border-bottom: 1px solid #ececec;
-  margin-bottom: 16px;
+  padding: 0 2.0rem 4.2rem;
+  border-bottom: .1rem solid #ececec;
+  margin-bottom: 1.6rem;
 }
 .progress-box ul {
   text-align: left;
 }
 .progress-box ul li {
   list-style: inside;
-  margin-bottom: 5px;
+  margin-bottom: .5rem;
 }
 </style>

@@ -5,17 +5,17 @@
 </template>
 <style scoped>
 .logo {
-  height: 48px;
+  height: 4.8rem;
   width: 100%;
   position: relative;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #ECECEC;
+  padding-bottom: 1.5rem;
+  border-bottom: .1rem solid #ECECEC;
 }
 .logo span {
   display: inline-block;
   position: absolute;
   top: 0;
-  font-size: 14px;
+  font-size: 1.4rem;
   cursor: pointer;
 }
 

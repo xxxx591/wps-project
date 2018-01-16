@@ -1,6 +1,5 @@
 <template>
   <div class="index">
-    <logo></logo>
     <div class="index-content">
       <h5>该服务由PaperTime提供一站式查重，改重，降重。</h5>
     </div>
@@ -16,10 +15,10 @@
       </ul>
     </div>
     <div>
-      <p class="remind-title"><i class="icon icon-remind"></i>对于新用户，系统赠送10000字免费体验。</p>
       <div class="btn" @click="showbox">
         开始全文查重
       </div>
+      <p class="remind-title"><i class="icon icon-remind"></i>对于新用户，系统赠送10000字免费体验。</p>
       <router-link to="/" class="history">历史记录</router-link>
     </div>
     <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" v-on:submitChange="submitChange"></frist-cost>
@@ -69,7 +68,7 @@ export default {
     submitChange(data) {
       this.$router.push({
         path: "/loading",
-        query: { userid: this.userId ,docCheckId:data}
+        query: { userid: this.userId, docCheckId: data }
       });
     }
   }
@@ -78,42 +77,60 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .index-content h5 {
-  color: #888;
+  background: #fff5e3;
+  border-radius: 2px;
+  margin: 0 0.83rem;
+  font-family: MicrosoftYaHei;
+  color: #fc750c;
+  letter-spacing: 0.28px;
   text-align: center;
-  margin: 26px 0;
   font-weight: 400;
+  margin-bottom: 4.17rem;
+  padding: 0.58rem 0;
 }
 .content-list ul li {
-  height: 60px;
-  margin-bottom: 29px;
+  height: 6rem;
+  margin-bottom: 2.9rem;
   color: #888;
 }
 .content-list ul li .list-icon {
   display: inline-block;
-  width: 34px;
-  height: 40px;
 }
 .right-content {
-  display: inline-block;
-  height: 60px;
-  width: 252px;
-  margin-left: 13px;
+  float: right;
+  width: calc(100% - 80px);
+}
+.right-content h3 {
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #222226;
+  letter-spacing: -0.39px;
+  margin-bottom: 0.42rem;
+}
+.right-content p {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: -0.29px;
 }
 .remind-title {
   text-align: center;
-  color: #888;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: -0.29px;
 }
 .btn {
-  margin-top: 90px;
+  margin: 5.83rem 1rem 0.83rem;
   text-align: center;
-  font-size: 20px;
-  line-height: 36px;
-  height: 36px;
-  background: #50b379;
-  border-radius: 4px;
+  font-size: 14px;
+  line-height: 3rem;
+  height: 3rem;
+  background: #3b7aca;
+  border-radius: 0.2px;
   color: #fff;
-  font-weight: 600;
   cursor: pointer;
+  letter-spacing: -0.34px;
 }
 .history {
   display: block;

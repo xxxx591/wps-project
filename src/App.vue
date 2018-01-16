@@ -57,10 +57,11 @@ body {
 }
 html {
   overflow: hidden;
+  font-size: 12px;
 }
 body {
   overflow: auto;
-  width: calc(100vw + 20px);
+  width: calc(100vw + 2rem);
 }
 li {
   list-style: none;
@@ -70,9 +71,8 @@ a {
 }
 #app {
   font-family: "微软雅黑";
-  width: 348px;
-  max-height: 895px;
-  font-size: 12px;
+  width: 29rem;
+  max-height: 72.17rem;
   margin: 0 auto;
 }
 
@@ -82,90 +82,89 @@ a {
   vertical-align: middle;
 }
 .icon-check {
-  width: 34px;
-  height: 40px;
+  width: 49px;
+  height: 49px;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -148px -39px;
+  background-position: -46px -122px;
 }
 .icon-robot {
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -226px -41px;
+  background-position: -143px -126px;
 }
 .icon-current-time {
-  width: 36px;
-  height: 34px;
+  width: 49px;
+  height: 49px;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -305px -42px;
+  background-position: -236px -124px;
 }
 .icon-return {
-  width: 8px;
-  height: 16px;
+  width: 0.8rem;
+  height: 1.6rem;
   background: url(./assets/icon.png)no-repeat;
   background-position: -43px -128px;
 }
 .icon-download {
-  width: 12px;
-  height: 12px;
+  width: 1.2rem;
+  height: 1.2rem;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -315px -280px;
+  background-position: -315px -28px;
 }
 .icon-qq {
-  width: 14px;
-  height: 14px;
+  width: 1.4rem;
+  height: 1.4rem;
   background: url(./assets/icon.png)no-repeat;
   background-position: -367px -279px;
 }
 .icon-remind {
-  width: 13px;
-  height: 14px;
-  background: url(./assets/icon.png)no-repeat;
-  background-position: -95px -129px;
-}
-.icon-refresh {
-  width: 12px;
+  width: 2.03rem;
   height: 12px;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -263px -280px;
+  background-position: -328px -122px;
+}
+.icon-refresh {
+  width: 1.2rem;
+  height: 1.2rem;
+  background: url(./assets/icon.png)no-repeat;
+  background-position: -263px 28px;
 }
 .icon-disable-input {
   width: 16px;
   height: 16px;
-  background: url(./assets/icon.png)no-repeat;
+  background: url(./assets/icon1.png)no-repeat;
   background-position: -253px -128px;
 }
 .icon-select-input {
   width: 16px;
   height: 16px;
-  background: url(./assets/icon.png)no-repeat;
+  background: url(./assets/icon1.png)no-repeat;
   background-position: -205px -128px;
   cursor: pointer;
 }
 .icon-input {
   width: 16px;
   height: 16px;
-  background: url(./assets/icon.png)no-repeat;
+  background: url(./assets/icon1.png)no-repeat;
   background-position: -149px -128px;
   cursor: pointer;
 }
 .icon-loading {
-  width: 132px;
-  height: 142px;
-  background: url(./assets/loading.png)no-repeat;
-  position: relative;
+  width: 93px;
+  height: 71px;
+  background: url(./assets/icon.png)no-repeat;
+  background-position: -382px -120px;
 }
 .content {
-  margin: 0 20px;
   height: 100%;
   overflow-y: auto;
-  margin-bottom: 55px;
+  margin-bottom: 5.5rem;
 }
 .foot {
   position: fixed;
   bottom: 0;
-  width: 348px;
-  height: 55px;
+  width: 34.8rem;
+  height: 5.5rem;
   background: orangered;
 }
 </style>

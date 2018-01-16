@@ -17,24 +17,24 @@
 </template>
 <style scoped>
 .logo {
-  height: 48px;
+  height: 4.8rem;
   width: 100%;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #ececec;
+  padding-bottom: 1.5rem;
+  border-bottom: .1rem solid #ececec;
 }
 .logo p {
-  margin: 10px 0;
+  margin: 1.0rem 0;
 }
 .logo span {
   display: inline-block;
-  font-size: 14px;
+  font-size: 1.4rem;
   cursor: pointer;
   width: 32%;
 }
 .logo-btn {
   outline: none;
   border: 0;
-  padding: 5px;
+  padding: .5rem;
   background: #fff;
   cursor: pointer;
 }
@@ -42,7 +42,7 @@
   text-align: right;
 }
 .logo-content-right i{
-  margin-right: 5px;
+  margin-right: .5rem;
 }
 .selected {
   background: #f1f1f2;
