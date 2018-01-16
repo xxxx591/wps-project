@@ -73,7 +73,6 @@ a {
   font-family: "微软雅黑";
   width: 29rem;
   max-height: 72.17rem;
-  margin: 0 auto;
 }
 
 .icon {
