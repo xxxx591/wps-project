@@ -12,9 +12,14 @@
       </div>
       <p class="progress-title01">0%</p>
       <h2 class="progress-title02">正在拼命检测中...请稍等片刻</h2>
-      <ul>
-        <li v-for="item in listItem" :key="item.index">{{item.content}}</li>
-      </ul>
+      <div class="progress-list">
+        <ul>
+          <li v-for="item in listItem" :key="item.index">
+            <i class="icon icon-dot"></i>
+            <p>{{item.content}}</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -100,16 +105,38 @@ export default {
 }
 .progress-title02 {
   font-size: 14px;
-color: #222226;
-letter-spacing: -0.34px;
-font-weight: 500;
-margin-bottom: 6.67rem;
+  color: #222226;
+  letter-spacing: -0.34px;
+  font-weight: 500;
+  margin-bottom: 6.67rem;
+}
+.progress-list {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 1.67rem 0.83rem;
 }
 .progress-box ul {
   text-align: left;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: -0.29px;
 }
 .progress-box ul li {
-  list-style: inside;
   margin-bottom: 0.5rem;
+  position: relative;
+}
+.progress-box ul li p {
+  display: inline-block;
+  width: 24.83rem;
+  margin-left: .87rem;
+}
+.icon-dot {
+  position: absolute;
+  background: #c5c5c5;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  top: 50%;
+  margin-top: -0.25rem;
 }
 </style>

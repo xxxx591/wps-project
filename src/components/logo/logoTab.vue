@@ -2,50 +2,55 @@
   <div class="logo">
     <p>
       <span @click="change"><i class="icon icon-return"></i>返回</span>
-      <span><i class="icon icon-refresh"></i>实时查重</span>
-      <span class="logo-content-right">余额{{balance}}字</span>
-    </p>
-    <p>
-      <span><button class="logo-btn" :class="{'selected':select}">全文标红</button></span>
-      <span><button class="logo-btn" :class="{'selected':selectFalse}">相似片段</button></span>
-      <span class="logo-content-right">
-        <i class="icon icon-download"></i>
-        <i class="icon icon-qq"></i>
+      <span class="logo-content-right">余额<span>{{balance}}</span>字
+      <i class="icon icon-download" @click="changeDownload"></i>
+      <i class="icon icon-qq" @click="changeQq"></i>
       </span>
     </p>
   </div>
 </template>
 <style scoped>
 .logo {
-  height: 4.8rem;
+  height: 3.3rem;
   width: 100%;
-  padding-bottom: 1.5rem;
-  border-bottom: .1rem solid #ececec;
+  line-height: 3.3rem;
 }
-.logo p {
-  margin: 1.0rem 0;
-}
+
 .logo span {
   display: inline-block;
-  font-size: 1.4rem;
   cursor: pointer;
-  width: 32%;
 }
 .logo-btn {
   outline: none;
   border: 0;
-  padding: .5rem;
+  padding: 0.5rem;
   background: #fff;
   cursor: pointer;
 }
 .logo-content-right {
-  text-align: right;
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.28px;
+  float: right;
 }
-.logo-content-right i{
-  margin-right: .5rem;
+.logo-content-right span {
+  color: #101000;
 }
 .selected {
   background: #f1f1f2;
+}
+.icon-qq:hover{
+  background-position: -196px -467px;
+}
+.icon-qq:active{
+    background-position: -347px -467px;
+}
+.icon-download:hover{
+  background-position: -196px -426px;
+}
+.icon-download:active{
+  background-position: -346px -426px;
 }
 </style>
 <script>
@@ -53,8 +58,7 @@ export default {
   name: "logotab",
   data() {
     return {
-      select: true,
-      selectFalse: false
+      
     };
   },
   props: {
@@ -65,7 +69,13 @@ export default {
   methods: {
     change() {
       this.$emit("returnChange", "返回上一页");
-    }
+    },
+    changeDownload(e){
+      
+      },
+    changeQq(e){
+      
+      },
   }
 };
 </script>

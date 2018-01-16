@@ -69,10 +69,15 @@ li {
 a {
   text-decoration: none;
 }
+button{
+  outline: none;
+  border:0;
+}
 #app {
   font-family: "微软雅黑";
   width: 29rem;
   max-height: 72.17rem;
+  margin: 0 auto;
 }
 
 .icon {
@@ -99,22 +104,22 @@ a {
   background-position: -236px -124px;
 }
 .icon-return {
-  width: 0.8rem;
-  height: 1.6rem;
-  background: url(./assets/icon.png)no-repeat;
+  width: 16px;
+  height: 16px;
+  background: url(./assets/icon1.png)no-repeat;
   background-position: -43px -128px;
 }
 .icon-download {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 20px;
+  height: 20px;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -315px -28px;
+  background-position: -45px -426px;
 }
 .icon-qq {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 20px;
+  height: 20px;
   background: url(./assets/icon.png)no-repeat;
-  background-position: -367px -279px;
+  background-position: -45px -467px;
 }
 .icon-remind {
   width: 2.03rem;

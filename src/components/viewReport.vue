@@ -134,7 +134,7 @@ export default {
 #check-details button {
   border: 0;
   outline: none;
-  background: #3479d4;
+  background: #3b7aca;
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 0.4rem;
@@ -148,7 +148,7 @@ export default {
 }
 .paging span {
   float: right;
-  background: #3479d4;
+  background: #3b7aca;
   cursor: pointer;
   color: #fff;
   margin-right: 1rem;
