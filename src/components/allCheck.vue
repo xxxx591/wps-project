@@ -21,7 +21,7 @@
       <p class="remind-title"><i class="icon icon-remind"></i>对于新用户，系统赠送10000字免费体验。</p>
       <router-link to="/" class="history">历史记录</router-link>
     </div>
-    <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" v-on:submitChange="submitChange"></frist-cost>
+    <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:submitChange="submitChange"></frist-cost>
   </div>
 </template>
 
@@ -50,11 +50,14 @@ export default {
         }
       ],
       panelShow: false,
-      userId: ""
+      userId: "",
+      wpstoken: null
     };
   },
   mounted: function() {
     this.userId = this.$route.query.userid;
+    this.wpstoken = this.$route.query.wpstoken;
+    console.log(this.wpstoken);
   },
   components: {
     logo,
@@ -68,7 +71,11 @@ export default {
     submitChange(data) {
       this.$router.push({
         path: "/loading",
-        query: { userid: this.userId, docCheckId: data }
+        query: {
+          userid: this.userId,
+          docCheckId: data,
+          wpstoken: this.wpstoken
+        }
       });
     }
   }

@@ -37,7 +37,8 @@ export default {
       msg: "全文标红区",
       userId: null,
       docCheckId: null,
-      balance: null
+      balance: null,
+      wpstoken: null
     };
   },
   components: {
@@ -46,17 +47,22 @@ export default {
   mounted: function() {
     this.userId = this.$route.query.userid;
     this.docCheckId = this.$route.query.docCheckId;
+    this.wpstoken = this.$route.query.wpstoken;
     var that = this;
     this.$http
       .get("api/v1/paper/index.html", {
         params: {
           userId: this.$route.query.userid,
           docCheckId: this.$route.query.docCheckId
+        },
+        headers: {
+          wpstoken: this.wpstoken,
+          userId: this.userId
         }
       })
-      .then(function(res) {
+      .then(res => {
         console.log(res);
-        that.balance = res.data.balance;
+        this.balance = res.data.balance;
       });
   },
   updated: function() {},

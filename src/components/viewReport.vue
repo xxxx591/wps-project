@@ -30,7 +30,8 @@ export default {
       listItem: [],
       pageSize: 10,
       pageNow: 1,
-      pageAll: 123
+      pageAll: 123,
+      wpstoken:null,
     };
   },
   components: {
@@ -39,17 +40,23 @@ export default {
   mounted: function() {
     var that = this;
     this.userId = this.$route.query.userid;
+    this.wpstoken = this.$route.query.wpstoken;
     this.$http
       .get("api/v1/paper/checkTaskList.html", {
         params: {
           userId: this.userId,
           pageSize: this.pageSize,
           pageNow: this.pageNow
+        },
+        headers: {
+          wpstoken: this.wpstoken,
+          userId: this.userId
         }
       })
-      .then(function(res) {
-        that.listItem = res.data.list;
-        that.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+      .then(res => {
+        console.log(res);
+        this.listItem = res.data.list;
+        this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
       });
   },
   methods: {
@@ -58,7 +65,7 @@ export default {
       console.log(this.docCheckId);
       this.$router.push({
         path: "/fullTxt",
-        query: { userid: this.userId, docCheckId: this.docCheckId }
+        query: { userid: this.userId, docCheckId: this.docCheckId,wpstoken: this.wpstoken }
       });
     },
     prev() {
@@ -73,10 +80,14 @@ export default {
               userId: this.userId,
               pageSize: this.pageSize,
               pageNow: this.pageNow
+            },
+            headers: {
+              wpstoken: this.wpstoken,
+              userId: this.userId
             }
           })
-          .then(function(res) {
-            that.listItem = res.data.list;
+          .then(res => {
+            this.listItem = res.data.list;
           });
       }
     },
@@ -90,10 +101,14 @@ export default {
               userId: this.userId,
               pageSize: this.pageSize,
               pageNow: this.pageNow
+            },
+            headers: {
+              wpstoken: this.wpstoken,
+              userId: this.userId
             }
           })
-          .then(function(res) {
-            that.listItem = res.data.list;
+          .then(res => {
+            this.listItem = res.data.list;
           });
       } else {
         return;

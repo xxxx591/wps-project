@@ -20,7 +20,8 @@ export default {
       istrue: true,
       isfalse: false,
       docCheckId: null,
-      userId: null
+      userId: null,
+      wpstoken:null
     };
   },
   components: {
@@ -40,14 +41,15 @@ export default {
       that.$http("api/v1/check/status.html", {
         params: {
           docCheckId: that.docCheckId
-        }
+        },
+        headers:{}
       }).then(function(res) {
         console.log(res.data.checkStatus);
         if (res.data.checkStatus == 2) {
           clearInterval(i)
           that.$router.push({
             path: "/fullTxt",
-            query: { userid: that.userId, docCheckId: that.docCheckId }
+            query: { userid: that.userId, docCheckId: that.docCheckId,wpstoken:this.wpstoken }
           });
         }
       });

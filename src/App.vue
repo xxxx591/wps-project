@@ -23,22 +23,24 @@ export default {
     this.$http
       .get("api/v1/check/init.html", {
         params: {
-          uuid: this.uuid
+          uuid: this.uuid,
+          wpstoken: null
         }
       })
       .then(res => {
         console.log(res);
         this.userid = res.data.userId;
+        this.wpstoken = res.data.wpstoken
         if (res.data.fullCheck == "0") {
           this.$router.push({
             path: "/allCheck",
-            query: { userid: this.userid }
+            query: { userid: this.userid, wpstoken: this.wpstoken }
           });
         } else if (res.data.fullCheck == "1") {
           console.log(this.$router);
           this.$router.push({
             path: "/viewReport",
-            query: { userid: this.userid }
+            query: { userid: this.userid, wpstoken: this.wpstoken }
           });
         }
       });
@@ -69,9 +71,9 @@ li {
 a {
   text-decoration: none;
 }
-button{
+button {
   outline: none;
-  border:0;
+  border: 0;
 }
 #app {
   font-family: "微软雅黑";

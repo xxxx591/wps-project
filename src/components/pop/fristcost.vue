@@ -46,6 +46,9 @@ export default {
       type: Boolean
     },
     userId: {
+      type: Number
+    },
+    wpstoken: {
       type: String
     }
   },
@@ -57,10 +60,15 @@ export default {
           title: "xin",
           editorTxt:
             "涵盖所有中英文类别，包括哲学、经济学、管理学、法学、社会科学、教育学、文学、艺术学、历史学、理学、工学、农学、医学、政治学、军事学等。"
+        },
+        headers: {
+          wpstoken: this.wpstoken,
+          userId: this.userId
         }
       })
       .then(res => {
         console.log(res);
+        console.log(this.wpstoken);
         if (res.data.status == "fail") {
           this.msg = "论文内容为空, 不能全文查重";
           this.show = false;
@@ -94,6 +102,10 @@ export default {
           params: {
             userId: this.userId,
             auto: this.auto
+          },
+          headers: {
+            wpstoken: this.wpstoken,
+            userId: this.userId
           }
         })
         .then(function(res) {
@@ -152,7 +164,7 @@ export default {
 .cost-list ul li {
   font-size: 1.16rem;
   margin-bottom: 3.33rem;
-  letter-spacing: 0.5rem;
+  letter-spacing: 0.28px;
 }
 .remind-content {
   font-size: 1.16rem;
@@ -175,7 +187,7 @@ export default {
   display: inline-block;
   width: 12.33rem;
   height: 3rem;
-  border-radius: .3rem;
+  border-radius: 0.3rem;
   line-height: 3rem;
   font-size: 1.67rem;
 }
@@ -188,6 +200,6 @@ export default {
   background: #03802c;
   border: 1px solid #03802c;
   color: #fff;
-  margin-left: .83rem;
+  margin-left: 0.83rem;
 }
 </style>
