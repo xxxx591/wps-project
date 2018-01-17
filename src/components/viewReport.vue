@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <logo></logo>
+    <logo :userId="userId" v-on:returncheck="returncheck"></logo>
     <div class="paper-list">
       <ul>
         <li id="list-heard">
@@ -11,7 +11,7 @@
         <li class="list-content" v-for="list in listItem" :key="list.index">
           <span>{{list.title}}</span>
           <span>{{list.submitTime}}</span>
-          <span id="check-details"><button @click="checkDetails(list.docCheckId)">详情</button></span>
+          <span id="check-details"><button @click="checkDetails(list.docCheckId,list.dataState)">详情</button></span>
         </li>
       </ul>
       <p class="paging">当前页{{pageNow}}，共{{pageAll}}页<span @click="next">下一页</span><span @click="prev">上一页</span></p>
@@ -60,7 +60,8 @@ export default {
       pageSize: 10,
       pageNow: 1,
       pageAll: 123,
-      wpstoken: null
+      wpstoken: null,
+      state: null
     };
   },
   components: {
@@ -83,26 +84,40 @@ export default {
         }
       })
       .then(res => {
-        console.log(res);
+        // console.log(res);
         for (let i = 0; i < res.data.list.length; i++) {
           this.listItem.push({
             title: res.data.list[i].title,
             submitTime: getMyDate(res.data.list[i].submitTime),
-            docCheckId: res.data.list[i].docCheckId
+            docCheckId: res.data.list[i].docCheckId,
+            dataState: res.data.list[i].status
           });
         }
+        // console.log(this.listItem);
         this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
       });
   },
   methods: {
-    checkDetails(event) {
+    checkDetails(event, state) {
       this.docCheckId = event;
-      this.$router.push({
-        path: "/fullTxt",
-        query: {
-          docCheckId: this.docCheckId
-        }
-      });
+      this.state = state;
+      if (state == 0 || state == 1) {
+        this.$router.push({
+          path: "/loading",
+          query: {
+            docCheckId: this.docCheckId
+          }
+        });
+      } else if (state == 2) {
+        this.$router.push({
+          path: "/fullTxt",
+          query: {
+            docCheckId: this.docCheckId
+          }
+        });
+      } else {
+        return;
+      }
     },
     prev() {
       var that = this;
@@ -128,7 +143,8 @@ export default {
               this.listItem.push({
                 title: res.data.list[i].title,
                 submitTime: getMyDate(res.data.list[i].submitTime),
-                docCheckId: res.data.list[i].docCheckId
+                docCheckId: res.data.list[i].docCheckId,
+                dataState: res.data.list[i].status
               });
             }
           });
@@ -156,13 +172,22 @@ export default {
               this.listItem.push({
                 title: res.data.list[i].title,
                 submitTime: getMyDate(res.data.list[i].submitTime),
-                docCheckId: res.data.list[i].docCheckId
+                docCheckId: res.data.list[i].docCheckId,
+                dataState: res.data.list[i].status
               });
             }
           });
       } else {
         return;
       }
+    },
+    returncheck(data) {
+      this.$router.push({
+        path: "/allCheck",
+        query: {
+          userId: this.userId
+        }
+      });
     }
   }
 };

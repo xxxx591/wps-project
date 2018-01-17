@@ -36,9 +36,9 @@ var store = window.sessionStorage;
         this.userId = store.userId;
         this.wpstoken = store.wpstoken;
         if (res.data.fullCheck == "0") {
-          // this.$router.push({
-          //   path: "/allCheck",
-          // });
+          this.$router.push({
+            path: "/allCheck",
+          });
         } else if (res.data.fullCheck == "1") {
           this.$router.push({
             path: "/viewReport",
@@ -82,7 +82,32 @@ button {
   max-height: 72.17rem;
   margin: 0 auto;
 }
-
+ .red {
+  color: #f64a4e;
+  cursor: pointer;
+}
+.red:hover{
+  text-decoration: underline;
+}
+.yellow {
+  color: #f5a623;
+  cursor: pointer;
+}
+.yellow:hover{
+  text-decoration: underline;
+}
+.green {
+  color: #1d8754;
+  cursor: pointer;
+}
+.green:hover{
+  text-decoration: underline;
+}
+.full-div {
+  color: #888888;
+  letter-spacing: 0.28px;
+  text-indent: 2em;
+}
 .icon {
   display: inline-block;
   background: red;

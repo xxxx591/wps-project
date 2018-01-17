@@ -3,7 +3,7 @@
     <p>
       <span @click="change"><i class="icon icon-return"></i>返回</span>
       <span class="logo-content-right">
-        <button class="check-btn" @click="change">全文查重</button>
+        <button class="check-btn" @click="checkAll">全文查重</button>
       </span>
     </p>
   </div>
@@ -60,7 +60,9 @@ export default {
     change() {
       this.$emit("returnChange", "返回上一页");
     },
-    changeDownload(e) {},
+    checkAll() {
+      this.$emit('returncheck','返回全文查重')
+    },
     changeQq(e) {}
   }
 };

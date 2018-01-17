@@ -8,27 +8,41 @@
         </div>
           <p class="full-p">
               <span class="content-left">全文标红</span>
-              <span class="content-right">相似片段</span>
+              <span class="content-right" @click="routerTo">相似片段</span>
           </p>
           <div class="title-box">
-            <span class="xsd-title">相似度 <span class="xsd">&nbsp;95%</span></span>
+            <span class="xsd-title">相似度 <span class="xsd">&nbsp;{{xsd}}%</span></span>
             <p class="title-box-content">使用实时查重降低相似度~~~~~~</p>
           </div>
-          <div class="full-div">
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
-              涵盖所有中英文类别，<span class="red">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学<span class="yellow">、艺术学、历史学、理学、工学、农学、医学、政治学</span>、军事学等。
+          <div class="paper-content-box">
           </div>
       </div>
   </div>
 </template>
 <script>
+function StringBuffer() {
+  this.__strings__ = new Array();
+}
+StringBuffer.prototype.append = function(str) {
+  this.__strings__.push(str);
+  return this; //方便链式操作
+};
+StringBuffer.prototype.toString = function() {
+  return this.__strings__.join("");
+};
+function replaceBlank(content) {
+  var result = new StringBuffer();
+  for (var i = 0; i < content.length; i++) {
+    var d = content.charAt(i);
+    var patt1 = new RegExp(/\s+/g);
+    if (patt1.test(d)) {
+      result.append("&nbsp;");
+    } else {
+      result.append(d);
+    }
+  }
+  return result.toString();
+}
 import logoTab from "@/components/logo/logoTab";
 export default {
   name: "fullTxt",
@@ -38,7 +52,8 @@ export default {
       userId: null,
       docCheckId: null,
       balance: null,
-      wpstoken: null
+      wpstoken: null,
+      xsd: null
     };
   },
   components: {
@@ -62,8 +77,87 @@ export default {
         }
       })
       .then(res => {
-        console.log(res);
         this.balance = res.data.balance;
+        if (
+          res.data.reviseStatus == "success" &&
+          res.data.status == "success"
+        ) {
+          this.$http
+            .get("api/v1/paper/loadData.html", {
+              params: {
+                userId: this.userId,
+                docCheckId: this.$route.query.docCheckId
+              },
+              headers: {
+                wpstoken: this.wpstoken,
+                userId: this.userId
+              }
+            })
+            .then(res => {
+              console.log(res);
+              this.xsd = Number(
+                (res.data.docResult.copyChar /
+                  res.data.docResult.checkChar *
+                  100
+                )
+                  .toString()
+                  .match(/^\d+(?:\.\d{0,2})?/)
+              );
+              var paraHtml = new StringBuffer();
+              for (
+                var i = 0;
+                i < res.data.docResult.paraResultList.length;
+                i++
+              ) {
+                paraHtml.append("<div class='full-div'>");
+                var lastIndex = 0;
+                var para = res.data.docResult.paraResultList[i];
+                if (para.senResultList.length > 0) {
+                  for (var j = 0; j < para.senResultList.length; j++) {
+                    var sen = para.senResultList[j];
+                    paraHtml.append(
+                      replaceBlank(
+                        para.content.substring(lastIndex, sen.startOffset)
+                      )
+                    );
+                    var ahClass = "";
+                    if (parseFloat(sen.simDegree) >= 0.5) {
+                      if (parseFloat(sen.simDegree) >= 0.8) {
+                        ahClass = "red";
+                      } else {
+                        ahClass = "yellow";
+                      }
+                    }
+                    paraHtml.append(
+                      '<a href="/#/fragment?senId=' +
+                        sen.senId +
+                        "&docId=" +
+                        res.data.docResult.docCheckId +
+                        '" class="' +
+                        ahClass +
+                        '">'
+                    );
+                    paraHtml.append(
+                      replaceBlank(
+                        para.content.substring(sen.startOffset, sen.endOffset)
+                      )
+                    );
+                    paraHtml.append("</a>");
+                    lastIndex = sen.endOffset;
+                  }
+                  paraHtml.append(
+                    replaceBlank(
+                      para.content.substring(lastIndex, para.content.length)
+                    )
+                  );
+                } else {
+                  paraHtml.append(replaceBlank(para.content));
+                }
+                paraHtml.append("</div>");
+              }
+              $(".paper-content-box").html(paraHtml.toString());
+            });
+        }
       });
   },
   updated: function() {},
@@ -71,6 +165,9 @@ export default {
     returnChange(data) {
       console.log(data);
       this.$router.go(-1);
+    },
+    routerTo() {
+      this.$router.push({ path: "/source", query: { docId: this.docCheckId } });
     }
   }
 };
@@ -124,18 +221,7 @@ export default {
   border-bottom: 2px solid #3b7aca;
   letter-spacing: 0.28px;
 }
-.full-div {
-  color: #888888;
-  letter-spacing: 0.28px;
-}
-.red {
-  color: #f64a4e;
-  cursor: pointer;
-}
-.yellow {
-  color: #f5a623;
-  cursor: pointer;
-}
+
 .title-box {
   height: 2.5rem;
   line-height: 2.5rem;
@@ -156,6 +242,6 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 21.15rem;
+  width: 19.7rem;
 }
 </style>
