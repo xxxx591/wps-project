@@ -1,6 +1,5 @@
 <template>
   <div class="hello">
-   <logo></logo>
    <div class="loading-box">
       <loading v-if="istrue"></loading>
       <check-loading v-if="isfalse"></check-loading>
@@ -9,7 +8,6 @@
 </template>
 
 <script>
-import logo from "@/components/logo/logo";
 import loading from "@/components/loading/loading";
 import checkLoading from "@/components/loading/checkLoading";
 export default {
@@ -21,38 +19,41 @@ export default {
       isfalse: false,
       docCheckId: null,
       userId: null,
-      wpstoken:null
+      wpstoken: null
     };
   },
   components: {
-    logo,
     loading,
     checkLoading
   },
-  beforeMount: function() {
-    this.docCheckId = this.$route.query.docCheckId;
-    this.userId = this.$route.query.userid;
-    console.log(this.userId + "====" + this.docCheckId);
-  },
+  beforeMount: function() {},
   mounted: function() {
+    this.docCheckId = this.$route.query.docCheckId;
+    console.log(this.docCheckId);
+    var store = window.sessionStorage;
+    this.userId = store.userId;
+    this.wpstoken = store.wpstoken;
     var that = this;
-     let i = setInterval(function() {
-      console.log(that);
+    let i = setInterval(data => {
       that.$http("api/v1/check/status.html", {
-        params: {
-          docCheckId: that.docCheckId
-        },
-        headers:{}
-      }).then(function(res) {
-        console.log(res.data.checkStatus);
-        if (res.data.checkStatus == 2) {
-          clearInterval(i)
-          that.$router.push({
-            path: "/fullTxt",
-            query: { userid: that.userId, docCheckId: that.docCheckId,wpstoken:this.wpstoken }
-          });
-        }
-      });
+          params: {
+            docCheckId: that.docCheckId
+          },
+          headers: {
+            wpstoken: this.wpstoken,
+            userId: this.userId
+          }
+        })
+        .then(function(res) {
+          console.log(res);
+          if (res.data.checkStatus == 2) {
+            clearInterval(i);
+            that.$router.push({
+              path: "/fullTxt",
+              query: { docCheckId: that.docCheckId }
+            });
+          }
+        });
     }, 5000);
   }
 };

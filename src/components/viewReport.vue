@@ -16,7 +16,6 @@
       </ul>
       <p class="paging">当前页{{pageNow}}，共{{pageAll}}页<span @click="next">下一页</span><span @click="prev">上一页</span></p>
     </div>
-    <Mainc></Mainc>
   </div>
 </template>
 
@@ -65,11 +64,12 @@ export default {
     };
   },
   components: {
-    logo,
+    logo
   },
   mounted: function() {
-    this.userId = this.$route.query.userid;
-    this.wpstoken = this.$route.query.wpstoken;
+    var store = window.sessionStorage;
+    this.userId = store.userId;
+    this.wpstoken = store.wpstoken;
     this.$http
       .get("api/v1/paper/checkTaskList.html", {
         params: {
@@ -97,13 +97,10 @@ export default {
   methods: {
     checkDetails(event) {
       this.docCheckId = event;
-      console.log(this.docCheckId);
       this.$router.push({
         path: "/fullTxt",
         query: {
-          userid: this.userId,
-          docCheckId: this.docCheckId,
-          wpstoken: this.wpstoken
+          docCheckId: this.docCheckId
         }
       });
     },

@@ -45,14 +45,15 @@ export default {
     logoTab
   },
   mounted: function() {
-    this.userId = this.$route.query.userid;
+    var store = window.sessionStorage;
+    this.userId = store.userId;
+    this.wpstoken = store.wpstoken;
     this.docCheckId = this.$route.query.docCheckId;
-    this.wpstoken = this.$route.query.wpstoken;
     var that = this;
     this.$http
       .get("api/v1/paper/index.html", {
         params: {
-          userId: this.$route.query.userid,
+          userId: this.userId,
           docCheckId: this.$route.query.docCheckId
         },
         headers: {

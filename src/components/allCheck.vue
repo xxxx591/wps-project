@@ -55,9 +55,9 @@ export default {
     };
   },
   mounted: function() {
-    this.userId = this.$route.query.userid;
-    this.wpstoken = this.$route.query.wpstoken;
-    console.log(this.wpstoken);
+    var store = window.sessionStorage;
+    this.userId = store.userId;
+    this.wpstoken = store.wpstoken;
   },
   components: {
     logo,
@@ -72,9 +72,7 @@ export default {
       this.$router.push({
         path: "/loading",
         query: {
-          userid: this.userId,
           docCheckId: data,
-          wpstoken: this.wpstoken
         }
       });
     }

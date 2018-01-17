@@ -1,22 +1,67 @@
 <template>
   <div class="logo">
-      <span><i class="icon icon-return"></i>返回</span>
+    <p>
+      <span @click="change"><i class="icon icon-return"></i>返回</span>
+      <span class="logo-content-right">
+        <button class="check-btn" @click="change">全文查重</button>
+      </span>
+    </p>
   </div>
 </template>
 <style scoped>
 .logo {
-  height: 4.8rem;
+  height: 3.3rem;
   width: 100%;
-  position: relative;
-  padding-bottom: 1.5rem;
-  border-bottom: .1rem solid #ECECEC;
-}
-.logo span {
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  font-size: 1.4rem;
-  cursor: pointer;
+  line-height: 3.3rem;
 }
 
+.logo span {
+  display: inline-block;
+  cursor: pointer;
+}
+.logo-btn {
+  outline: none;
+  border: 0;
+  padding: 0.5rem;
+  background: #fff;
+  cursor: pointer;
+}
+.logo-content-right {
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.28px;
+  float: right;
+}
+.logo-content-right span {
+  color: #101000;
+}
+.check-btn {
+  background: #3b7aca;
+  border-radius: 4px;
+  width: 13.33rem;
+  height: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+}
 </style>
+<script>
+export default {
+  name: "logotab",
+  data() {
+    return {};
+  },
+  props: {
+    balance: {
+      type: Number
+    }
+  },
+  methods: {
+    change() {
+      this.$emit("returnChange", "返回上一页");
+    },
+    changeDownload(e) {},
+    changeQq(e) {}
+  }
+};
+</script>

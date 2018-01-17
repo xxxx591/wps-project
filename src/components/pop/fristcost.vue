@@ -46,20 +46,23 @@ export default {
       type: Boolean
     },
     userId: {
-      type: Number
+      type: String
     },
     wpstoken: {
       type: String
     }
   },
   mounted: function() {
+    var store = window.sessionStorage;
+    this.userId = store.userId;
+    this.wpstoken = store.wpstoken;
     this.$http
       .get("api/v1/check/full/init.html", {
         params: {
           userId: this.userId,
-          title: "xin",
+          title: "谢沅航的测试",
           editorTxt:
-            "涵盖所有中英文类别，包括哲学、经济学、管理学、法学、社会科学、教育学、文学、艺术学、历史学、理学、工学、农学、医学、政治学、军事学等。"
+            "谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航谢沅航"
         },
         headers: {
           wpstoken: this.wpstoken,

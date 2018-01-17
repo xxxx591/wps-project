@@ -10,18 +10,18 @@
 </template>
 
 <script>
-import { userid } from "./state/store";
 export default {
   name: "app",
   data() {
     return {
       userid: "",
       docid: "",
-      uuid: "test"
+      uuid: "test",
+      wpstoken:'',
     };
   },
   mounted: function() {
-    userid();
+var store = window.sessionStorage;
     this.$http
       .get("api/v1/check/init.html", {
         params: {
@@ -31,18 +31,17 @@ export default {
       })
       .then(res => {
         console.log(res);
-        this.userid = res.data.userId;
-        this.wpstoken = res.data.wpstoken
+        store.userId = res.data.userId;
+        store.wpstoken = res.data.wpstoken;
+        this.userId = store.userId;
+        this.wpstoken = store.wpstoken;
         if (res.data.fullCheck == "0") {
-          this.$router.push({
-            path: "/allCheck",
-            query: { userid: this.userid, wpstoken: this.wpstoken }
-          });
+          // this.$router.push({
+          //   path: "/allCheck",
+          // });
         } else if (res.data.fullCheck == "1") {
-          console.log(this.$router);
           this.$router.push({
             path: "/viewReport",
-            query: { userid: this.userid, wpstoken: this.wpstoken }
           });
         }
       });
