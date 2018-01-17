@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { userid } from "./state/store";
 export default {
   name: "app",
   data() {
@@ -20,6 +21,7 @@ export default {
     };
   },
   mounted: function() {
+    userid();
     this.$http
       .get("api/v1/check/init.html", {
         params: {

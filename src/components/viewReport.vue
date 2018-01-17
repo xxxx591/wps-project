@@ -16,11 +16,41 @@
       </ul>
       <p class="paging">当前页{{pageNow}}，共{{pageAll}}页<span @click="next">下一页</span><span @click="prev">上一页</span></p>
     </div>
+    <Mainc></Mainc>
   </div>
 </template>
 
 <script>
 import logo from "@/components/logo/logo";
+function getMyDate(str) {
+  var oDate = new Date(str),
+    oYear = oDate.getFullYear(),
+    oMonth = oDate.getMonth() + 1,
+    oDay = oDate.getDate(),
+    oHour = oDate.getHours(),
+    oMin = oDate.getMinutes(),
+    oSen = oDate.getSeconds(),
+    oTime =
+      oYear +
+      "-" +
+      getzf(oMonth) +
+      "-" +
+      getzf(oDay) +
+      " " +
+      getzf(oHour) +
+      ":" +
+      getzf(oMin) +
+      ":" +
+      getzf(oSen); //最后拼接时间
+  return oTime;
+}
+//补0操作
+function getzf(num) {
+  if (parseInt(num) < 10) {
+    num = "0" + num;
+  }
+  return num;
+}
 export default {
   name: "viewReport",
   data() {
@@ -31,14 +61,13 @@ export default {
       pageSize: 10,
       pageNow: 1,
       pageAll: 123,
-      wpstoken:null,
+      wpstoken: null
     };
   },
   components: {
-    logo
+    logo,
   },
   mounted: function() {
-    var that = this;
     this.userId = this.$route.query.userid;
     this.wpstoken = this.$route.query.wpstoken;
     this.$http
@@ -55,7 +84,13 @@ export default {
       })
       .then(res => {
         console.log(res);
-        this.listItem = res.data.list;
+        for (let i = 0; i < res.data.list.length; i++) {
+          this.listItem.push({
+            title: res.data.list[i].title,
+            submitTime: getMyDate(res.data.list[i].submitTime),
+            docCheckId: res.data.list[i].docCheckId
+          });
+        }
         this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
       });
   },
@@ -65,7 +100,11 @@ export default {
       console.log(this.docCheckId);
       this.$router.push({
         path: "/fullTxt",
-        query: { userid: this.userId, docCheckId: this.docCheckId,wpstoken: this.wpstoken }
+        query: {
+          userid: this.userId,
+          docCheckId: this.docCheckId,
+          wpstoken: this.wpstoken
+        }
       });
     },
     prev() {
@@ -87,7 +126,14 @@ export default {
             }
           })
           .then(res => {
-            this.listItem = res.data.list;
+            this.listItem = [];
+            for (let i = 0; i < res.data.list.length; i++) {
+              this.listItem.push({
+                title: res.data.list[i].title,
+                submitTime: getMyDate(res.data.list[i].submitTime),
+                docCheckId: res.data.list[i].docCheckId
+              });
+            }
           });
       }
     },
@@ -108,7 +154,14 @@ export default {
             }
           })
           .then(res => {
-            this.listItem = res.data.list;
+            this.listItem = [];
+            for (let i = 0; i < res.data.list.length; i++) {
+              this.listItem.push({
+                title: res.data.list[i].title,
+                submitTime: getMyDate(res.data.list[i].submitTime),
+                docCheckId: res.data.list[i].docCheckId
+              });
+            }
           });
       } else {
         return;
@@ -141,7 +194,6 @@ export default {
 .list-content span {
   display: inline-block;
   width: 32%;
-  font-size: 1.2rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
