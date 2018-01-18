@@ -32,8 +32,8 @@ export default {
       balance: null,
       wpstoken: null,
       xsd: null,
-      reviseStatus:'',
-      status:''
+      reviseStatus: "",
+      status: ""
     };
   },
   components: {
@@ -63,6 +63,7 @@ export default {
         }
         this.balance = res.data.balance;
         this.status = res.data.autoStatus;
+        console.log(this.status);
         if (
           res.data.reviseStatus == "success" &&
           res.data.status == "success"
@@ -118,6 +119,8 @@ export default {
                         sen.senId +
                         "&docId=" +
                         res.data.docResult.docCheckId +
+                        "&staus=" +
+                        this.status +
                         '" class="' +
                         ahClass +
                         '">'
@@ -148,8 +151,8 @@ export default {
   updated: function() {},
   methods: {
     returnChange(data) {
-      console.log('返回到检测列表');
-      this.$router.push({path:'/viewReport'});
+      console.log("返回到检测列表");
+      this.$router.push({ path: "/viewReport" });
     },
     routerTo() {
       this.$router.push({
@@ -158,7 +161,7 @@ export default {
           docCheckId: this.docCheckId,
           xsd: this.xsd,
           balance: this.balance,
-          status:this.status
+          status: this.status
         }
       });
     }

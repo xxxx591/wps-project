@@ -2,11 +2,13 @@
   <div>
       <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
       <div class="full-content">
+          <div class="btn-box">
+            <button class="check-box">实时查重</button>
+            <button class="robot-box">机器人降重</button>
+          </div>
           <div class="title-box">
             <span class="xsd-title">您的语句（相似度：<span class="xsd">&nbsp;{{xsd}}%</span>） </span>
-            <span>
-            <button class="source-btn">降重</button>
-            </span>
+            
           </div>
           <div class="original-text">
             {{content}}
@@ -63,6 +65,9 @@ export default {
     this.wpstoken = store.wpstoken;
     this.docCheckId = this.$route.query.docId;
     this.sendId = this.$route.query.senId;
+    if ((this.$route.query.status = "1")) {
+      $(".robot-box").attr("disabled", "disabled");
+    }
     var that = this;
     this.$http
       .get("api/v1/paper/index.html", {
@@ -277,23 +282,29 @@ export default {
   margin: 1rem 0.83rem 0.67rem;
   line-height: 1.83rem;
 }
-.source-btn {
-  background: #3b7aca;
-  border-radius: 2px;
-  width: 5.83rem;
-  height: 1.83rem;
-  line-height: 1.83rem;
-  color: #fff;
+.btn-box {
+  margin: 0 0.83rem 0.83rem;
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
   letter-spacing: 0.28px;
-  float: right;
-  cursor: pointer;
-  margin-top: 0.35rem;
 }
-.source-btn:hover {
+.btn-box button {
+  background: #3b7aca;
+  border-radius: 4px;
+  width: 13.33rem;
+  height: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+.btn-box button:hover {
   background: #548ed7;
 }
-.source-btn:active {
+.btn-box button:active {
   background: #2e69b3;
+}
+.btn-box button:disabled {
+  background: rgba(59, 122, 202, 0.4);
+  color: #ffffff;
 }
 .original-text {
   background: #f5f5f5;
