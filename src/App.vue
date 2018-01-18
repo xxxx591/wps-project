@@ -14,19 +14,19 @@ export default {
   name: "app",
   data() {
     return {
-      userid: "",
+      userid: "1",
       docid: "",
-      uuid: "test",
-      wpstoken:'',
+      userName: "test",
+      wpstoken: ""
     };
   },
   mounted: function() {
-var store = window.sessionStorage;
+    var store = window.sessionStorage;
     this.$http
       .get("api/v1/check/init.html", {
         params: {
-          uuid: this.uuid,
-          wpstoken: null
+          userName: this.userName,
+          userId:this.userid
         }
       })
       .then(res => {
@@ -37,11 +37,11 @@ var store = window.sessionStorage;
         this.wpstoken = store.wpstoken;
         if (res.data.fullCheck == "0") {
           this.$router.push({
-            path: "/allCheck",
+            path: "/allCheck"
           });
         } else if (res.data.fullCheck == "1") {
           this.$router.push({
-            path: "/viewReport",
+            path: "/viewReport"
           });
         }
       });
@@ -54,17 +54,26 @@ var store = window.sessionStorage;
   margin: 0;
   padding: 0;
 }
-html,
-body {
-  height: 100%;
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 4px;
 }
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-corner,
+::-webkit-resizer {
+  background: #fff;
+}
+
 html {
-  overflow: hidden;
   font-size: 12px;
 }
 body {
   overflow: auto;
-  width: calc(100vw + 2rem);
 }
 li {
   list-style: none;
@@ -76,31 +85,34 @@ button {
   outline: none;
   border: 0;
 }
+i {
+  font-style: normal;
+}
 #app {
   font-family: "微软雅黑";
   width: 29rem;
   max-height: 72.17rem;
   margin: 0 auto;
 }
- .red {
+.red {
   color: #f64a4e;
   cursor: pointer;
 }
-.red:hover{
+.red:hover {
   text-decoration: underline;
 }
 .yellow {
   color: #f5a623;
   cursor: pointer;
 }
-.yellow:hover{
+.yellow:hover {
   text-decoration: underline;
 }
 .green {
   color: #1d8754;
   cursor: pointer;
 }
-.green:hover{
+.green:hover {
   text-decoration: underline;
 }
 .full-div {
@@ -198,5 +210,87 @@ button {
   width: 34.8rem;
   height: 5.5rem;
   background: orangered;
+}
+
+/* -------source页面----- */
+.source-div {
+  max-height: 45.32rem;
+  overflow-y: auto;
+}
+.source-box {
+  min-width: 25.67rem;
+  min-height: 11.33rem;
+  background: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  margin: 1.25rem 1.67rem 0;
+}
+.source-box:last-of-type {
+  margin-bottom: 1.25rem;
+}
+.num {
+  display: inline-block;
+  background: #dbdbdb;
+  border-radius: 2px;
+  height: 1.33rem;
+  width: 1.33rem;
+  text-align: center;
+  line-height: 1.33rem;
+}
+.source-title {
+  display: inline-block;
+  height: 1.33rem;
+  line-height: 1.33rem;
+  margin-left: 0.42rem;
+}
+.source-01 {
+  height: 1.83rem;
+  margin: 1rem 0.83rem 0.67rem;
+  line-height: 1.83rem;
+}
+.source-02 {
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #222226;
+  letter-spacing: 0.28px;
+  height: 1.33rem;
+  line-height: 1.33rem;
+  margin: 0 0 0.42rem 0.67rem;
+}
+.source-03 {
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.28px;
+  margin: 0 0.67rem 0.42rem;
+}
+.source-04 {
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.28px;
+  line-height: 16px;
+  margin: 0 0.67rem 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.source-04-02 {
+  margin-bottom: 1.25rem;
+}
+.source-04-01 {
+  color: #619ae2;
+}
+.colors {
+  color: #f64a4e;
+}
+
+/* fragment页面 */
+.page-num {
+  display: inline-block;
+  padding: 0 0.4rem;
+}
+.page-select {
+  color: #101000;
 }
 </style>

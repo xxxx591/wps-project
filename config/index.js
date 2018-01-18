@@ -16,7 +16,15 @@ module.exports = {
         pathRewrite: {
           "^/api": "/"
         }
-      }
+      },
+      "/xyh": {
+        target: "http://192.168.0.168:8080/",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/xyh": "/"
+        }
+      },
+
     },
     // Various Dev Server settings
     host: "localhost", // can be overwritten by process.env.HOST

@@ -2,38 +2,43 @@
   <div>
       <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
       <div class="full-content">
-        <div class="btn-box">
-          <button class="check-box">实时查重</button>
-          <button class="robot-box">机器人降重</button>
-        </div>
-          <p class="full-p">
-              <span class="content-left">全文标红</span>
-              <span class="content-right">相似片段</span>
-          </p>
           <div class="title-box">
-            <span class="xsd-title">相似度 <span class="xsd">&nbsp;95%</span></span>
-            <p class="title-box-content">绿色文字表示机器人修改</p>
+            <span class="xsd-title">您的语句（相似度：<span class="xsd">&nbsp;{{xsd}}%</span>） </span>
+            <span>
+            <button class="source-btn">降重</button>
+            </span>
           </div>
-          <div class="fragment-div">
-              <ul>
-                <li class="fragment-box">
-                  <div class="fragment-01">
+          <div class="original-text">
+            {{content}}
+          </div>
+          <p class="content-num">
+            找到相似内容：{{contentSimilarity}}个
+          </p>
+          <div class="source-div">
+              <!-- <ul>
+                <li class="source-box">
+                  <div class="source-01">
                     <span class="num">1</span>
-                    <span class="fragment-title">相似度：<span class="red">22%</span></span>
-                    <button class="fragment-btn">降重</button>
+                    <span class="source-title">相似度：<span class="red">22%</span></span>
                     </div>
-                    <p class="fragment-02">相似内容片断：</p>
-                    <div class="fragment-03">
+                    <p class="source-02">相似内容片断：</p>
+                    <div class="source-03">
 ...在选择《九型人格管理学》作为通选课之前，<span class="red">我对这门课也有耳闻，限于对此课程的一些的表面内容，比如它把人分为九</span>个类型、与管理有关等。仅是这些也引起我的兴趣去选择《九型人格管理学》…
                     </div>
+                    <div class="source-04">
+                      <p>来源：PaperTime云论文库</p>
+                      <p>标题：《测试文件》</p>
+                      <p>链接：<a href="javascript:;" class="source-04-01">http://www.baidu.com</a></p>
+                    </div>
                 </li>
-              </ul>
+              </ul> -->
           </div>
       </div>
   </div>
 </template>
 <script>
 import logoTab from "@/components/logo/logoTab";
+import { StringBuffer, replaceBlank } from "../state/index";
 export default {
   name: "fullTxt",
   data() {
@@ -43,7 +48,10 @@ export default {
       docCheckId: null,
       balance: null,
       wpstoken: null,
-      sendId: null
+      sendId: null,
+      contentSimilarity: null,
+      content: "",
+      xsd: null
     };
   },
   components: {
@@ -60,7 +68,7 @@ export default {
       .get("api/v1/paper/index.html", {
         params: {
           userId: this.userId,
-          docCheckId: this.$route.query.docCheckId
+          docCheckId: this.docCheckId
         },
         headers: {
           wpstoken: this.wpstoken,
@@ -68,8 +76,140 @@ export default {
         }
       })
       .then(res => {
-        console.log(res);
         this.balance = res.data.balance;
+        if (
+          res.data.reviseStatus == "success" &&
+          res.data.status == "success"
+        ) {
+          this.$http
+            .get("api/v1/paper/loadData.html", {
+              params: {
+                userId: this.userId,
+                docCheckId: this.$route.query.docId
+              },
+              headers: {
+                wpstoken: this.wpstoken,
+                userId: this.userId
+              }
+            })
+            .then(res => {
+              console.log(res);
+              var paraHtml = new StringBuffer();
+              for (
+                var i = 0;
+                i < res.data.docResult.paraResultList.length;
+                i++
+              ) {
+                var lastIndex = 0;
+                var para = res.data.docResult.paraResultList[i];
+                if (para.senResultList.length > 0) {
+                  for (var j = 0; j < para.senResultList.length; j++) {
+                    var sen = para.senResultList[j];
+                    lastIndex = sen.endOffset;
+                    // console.log(sen.senId+'----'+this.sendId);
+                    // 添加一个判断 senId  和 router 带过来的是不是一样
+                    if (sen.senId == this.sendId) {
+                      if (sen.simResultList.length > 0) {
+                        paraHtml.append('<div class="source-div">');
+                        paraHtml.append("<ul>");
+                        for (let si = 0; si < sen.simResultList.length; si++) {
+                          this.contentSimilarity = sen.simResultList.length;
+                          this.xsd = parseFloat(sen.simDegree * 100).toFixed(2);
+                          var sim = sen.simResultList[si];
+                          this.content = sim.simSentence;
+                          paraHtml.append("<li  class='source-box'>");
+                          paraHtml.append('<div class="source-01">');
+                          paraHtml.append(
+                            "<span class='num'>" + (si + 1) + "</span>"
+                          );
+                          paraHtml.append(
+                            "<span class='source-title'>相似度</span>"
+                          );
+                          paraHtml.append(
+                            "<span class='red'>" +
+                              (parseFloat(sim.simDegree) * 100).toFixed(2) +
+                              "%</span>"
+                          );
+                          paraHtml.append("</div>");
+                          paraHtml.append('<p class="source-02">相似内容片段：</p>');
+                          paraHtml.append(
+                            '<p class="source-03">' + sim.simSegment + "</p>"
+                          );
+                          var pageInfo =
+                            res.data.docResult.pageWrapMap[sim.pageId];
+                          if (pageInfo) {
+                            if (pageInfo.source > 0 && pageInfo.source != 3) {
+                              paraHtml.append(
+                                '<p class="source-04">来源(本地数据库)</p>'
+                              );
+                              var titles = pageInfo.title.split("|#|");
+                              paraHtml.append(
+                                '<p class="source-04">篇名：《' +
+                                  titles[0] +
+                                  "》</p>"
+                              );
+                              paraHtml.append(
+                                '<p class="source-04">期刊：《' +
+                                  titles[2] +
+                                  "》</p>"
+                              );
+                              paraHtml.append(
+                                '<p class="source-04">年份： ' + titles[3] + "</p>"
+                              );
+                              paraHtml.append(
+                                '<p class="source-04">作者： ' + titles[1] + "</p>"
+                              );
+                            } else {
+                              if (pageInfo.source == 3) {
+                                paraHtml.append(
+                                  '<p class="source-04">来源(PaperTime云论文库)</p>'
+                                );
+                              } else {
+                                paraHtml.append(
+                                  '<p class="source-04">来源(互联网资源)</p>'
+                                );
+                              }
+                              paraHtml.append(
+                                '<p class="source-04">标题：' +
+                                  pageInfo.title +
+                                  "</p>"
+                              );
+                              paraHtml.append(
+                                '<p class="source-04 source-04-02">链接：'
+                              );
+                              paraHtml.append(
+                                '<a class="source-04-01" href="' +
+                                  pageInfo.url +
+                                  '" target="_blank">'
+                              );
+                              if (pageInfo.url.length > 50) {
+                                paraHtml.append(pageInfo.url.substring(0, 50));
+                              } else {
+                                paraHtml.append(pageInfo.url);
+                              }
+                              paraHtml.append("</a>");
+                              paraHtml.append("</p>");
+                            }
+                          }
+                          paraHtml.append("</li>");
+                        }
+                        paraHtml.append("</ul>");
+                        paraHtml.append("</div>");
+                      }
+                    }
+                  }
+                  paraHtml.append(
+                    replaceBlank(
+                      para.content.substring(lastIndex, para.content.length)
+                    )
+                  );
+                } else {
+                  paraHtml.append(replaceBlank(para.content));
+                }
+              }
+              $(".source-div").html(paraHtml.toString());
+            });
+        }
       });
   },
   updated: function() {},
@@ -82,37 +222,6 @@ export default {
 };
 </script>
 <style scoped>
-.full-p {
-  margin: 0 0.83rem 0.83rem;
-}
-.full-p span {
-  display: inline-block;
-  width: 50%;
-  text-align: center;
-  height: 2.5rem;
-  cursor: pointer;
-  line-height: 2.5rem;
-}
-.btn-box {
-  margin: 0 0.83rem 0.83rem;
-  font-family: MicrosoftYaHei;
-  font-size: 12px;
-  letter-spacing: 0.28px;
-}
-.btn-box button {
-  background: #3b7aca;
-  border-radius: 4px;
-  width: 13.33rem;
-  height: 2.5rem;
-  color: #fff;
-  cursor: pointer;
-}
-.btn-box button:hover {
-  background: #548ed7;
-}
-.btn-box button:active {
-  background: #2e69b3;
-}
 .check-box {
   margin-right: 0.67rem;
 }
@@ -151,43 +260,24 @@ export default {
   color: #222226;
   letter-spacing: 0.28px;
 }
-.title-box-content {
-  color: #fc750c;
-  letter-spacing: 0.28px;
-  background: #fff5e3;
-  border-radius: 2px;
-  text-indent: 1.23rem;
-  display: inline-block;
-  width: 21.15rem;
+.source-div ul {
+  max-height: 45.32rem;
+  overflow-y: auto;
 }
-.fragment-box {
+.source-box {
   min-width: 25.67rem;
-  height: 11.33rem;
+  min-height: 11.33rem;
   background: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
   margin: 1.25rem 1.67rem 0;
 }
-.fragment-01 {
+.source-01 {
   height: 1.83rem;
-  margin: 0.83rem 0.67rem 0.33rem 0.83rem;
+  margin: 1rem 0.83rem 0.67rem;
   line-height: 1.83rem;
 }
-.num {
-  display: inline-block;
-  background: #dbdbdb;
-  border-radius: 2px;
-  height: 1.33rem;
-  width: 1.33rem;
-  text-align: center;
-  line-height: 1.33rem;
-}
-.fragment-title {
-  display: inline-block;
-  height: 1.33rem;
-  line-height: 1.33rem;
-}
-.fragment-btn {
+.source-btn {
   background: #3b7aca;
   border-radius: 2px;
   width: 5.83rem;
@@ -197,21 +287,29 @@ export default {
   letter-spacing: 0.28px;
   float: right;
   cursor: pointer;
+  margin-top: 0.35rem;
 }
-.fragment-02 {
+.source-btn:hover {
+  background: #548ed7;
+}
+.source-btn:active {
+  background: #2e69b3;
+}
+.original-text {
+  background: #f5f5f5;
+  border-radius: 2px;
   font-family: MicrosoftYaHei;
   font-size: 12px;
-  color: #222226;
+  color: #f64a4e;
   letter-spacing: 0.28px;
-  height: 1.33rem;
-  line-height: 1.33rem;
-  margin: 0 0 0.42rem 0.67rem;
+  padding: 0.67rem 0.83rem;
+  margin: 1.25rem 0.83rem 0;
 }
-.fragment-03 {
+.content-num {
   font-family: MicrosoftYaHei;
   font-size: 12px;
-  color: #888888;
+  color: #696969;
   letter-spacing: 0.28px;
-  margin: 0 0.67rem 1.25rem;
+  margin: 1.25rem 0.83rem 0;
 }
 </style>

@@ -64,7 +64,8 @@ export default {
   props: {
     balance: {
       type: Number
-    }
+    },
+
   },
   methods: {
     change() {

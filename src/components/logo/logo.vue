@@ -1,9 +1,9 @@
 <template>
   <div class="logo">
     <p>
-      <span @click="change"><i class="icon icon-return"></i>返回</span>
+      <span @click="checkAll" ><i class="icon icon-return"></i>返回</span>
       <span class="logo-content-right">
-        <button class="check-btn" @click="checkAll">全文查重</button>
+        <!-- <button class="check-btn" @click="checkAll">全文查重</button> -->
       </span>
     </p>
   </div>

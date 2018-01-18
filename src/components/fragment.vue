@@ -7,27 +7,34 @@
           <button class="robot-box">机器人降重</button>
         </div>
           <p class="full-p">
-              <span class="content-left">全文标红</span>
+              <span class="content-left" @click="allPaper">全文标红</span>
               <span class="content-right">相似片段</span>
           </p>
           <div class="title-box">
-            <span class="xsd-title">相似度 <span class="xsd">&nbsp;95%</span></span>
+            <span class="xsd-title">相似度 <span class="xsd">&nbsp;{{this.$route.query.xsd}}%</span></span>
             <p class="title-box-content">绿色文字表示机器人修改</p>
           </div>
           <div class="fragment-div">
               <ul>
-                <li class="fragment-box">
+                <li class="fragment-box" v-for="(list,index) in listItem" :key="list.index">
                   <div class="fragment-01">
-                    <span class="num">1</span>
-                    <span class="fragment-title">相似度：<span class="red">22%</span></span>
-                    <button class="fragment-btn">降重</button>
+                    <span class="num">{{index+1}}</span>
+                    <span class="fragment-title">相似度：<span class="colors">{{list.simDegree}}%</span></span>
+                    <button class="fragment-btn" @click="routeSource(list.senId)">相似来源</button>
                     </div>
                     <p class="fragment-02">相似内容片断：</p>
                     <div class="fragment-03">
-...在选择《九型人格管理学》作为通选课之前，<span class="red">我对这门课也有耳闻，限于对此课程的一些的表面内容，比如它把人分为九</span>个类型、与管理有关等。仅是这些也引起我的兴趣去选择《九型人格管理学》…
+                      ...<span class="colors">{{list.segment}}</span>...
                     </div>
                 </li>
               </ul>
+              <p class="paging">
+                <span class="prev" @click="prev">上一页</span>
+                <span class="page-box">
+                  <!-- <i v-for="n in this.pageAll" :key="n.index" class="">{{n}}</i><i>...</i> -->
+                </span>
+                <span class="next" @click="next">下一页</span>
+              </p>
           </div>
       </div>
   </div>
@@ -43,7 +50,13 @@ export default {
       docCheckId: null,
       balance: null,
       wpstoken: null,
-      sendId: null
+      sendId: null,
+      listItem: [],
+      pageSize: 10,
+      pageNow: 1,
+      pageAll: null,
+      n: 0,
+      s: 0,
     };
   },
   components: {
@@ -53,14 +66,18 @@ export default {
     var store = window.sessionStorage;
     this.userId = store.userId;
     this.wpstoken = store.wpstoken;
-    this.docCheckId = this.$route.query.docId;
+    this.docCheckId = this.$route.query.docCheckId;
+    this.balance = this.$route.query.balance;
     this.sendId = this.$route.query.senId;
-    var that = this;
+    if (this.$route.query.status =='1') {
+      $(".robot-box").attr("disabled", "disabled");
+    }
     this.$http
-      .get("api/v1/paper/index.html", {
+      .get("api/v1/paper/loadSegment.html", {
         params: {
-          userId: this.userId,
-          docCheckId: this.$route.query.docCheckId
+          docCheckId: this.docCheckId,
+          pageNow: this.pageNow,
+          pageSize: this.pageSize
         },
         headers: {
           wpstoken: this.wpstoken,
@@ -68,15 +85,154 @@ export default {
         }
       })
       .then(res => {
-        console.log(res);
-        this.balance = res.data.balance;
+        var sen = res.data.segment;
+        for (let i = 0; i < sen.length; i++) {
+          this.listItem.push({
+            segment: sen[i].segment,
+            simDegree: parseFloat(sen[i].simDegree * 100).toFixed(2),
+            simAuto: parseFloat(sen[i].simAuto * 100).toFixed(2),
+            senId: sen[i].senId
+          });
+        }
+        this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+        if (this.pageNow > 3) {
+          if (this.pageNow + 2 >= this.pageAll) {
+            this.n = this.pageNow - 2;
+          } else {
+            this.n = this.pageAll - 4;
+            this.n = this.n > 0 ? this.n : 1;
+          }
+        }
+        for (let n = 0; n < this.pageAll; n++) {
+          $(".page-box").append('<i class="page-num">' + (n + 1) + "</i>");
+        }
+        $(".page-num")
+          .eq(this.n)
+          .addClass("page-select")
+          .siblings(".page-num")
+          .removeClass("page-select");
       });
   },
   updated: function() {},
   methods: {
     returnChange(data) {
-      console.log(data);
-      this.$router.go(-1);
+      console.log('返回到检测列表');
+      this.$router.push({path:'/viewReport'});
+    },
+    allPaper() {
+      this.$router.push({
+        path: "/fullTxt",
+        query: { docCheckId: this.docCheckId }
+      });
+    },
+    next() {
+      if (this.pageNow < this.pageAll) {
+        this.pageNow += 1;
+        this.$http
+          .get("api/v1/paper/loadSegment.html", {
+            params: {
+              docCheckId: this.docCheckId,
+              pageNow: this.pageNow,
+              pageSize: this.pageSize
+            },
+            headers: {
+              wpstoken: this.wpstoken,
+              userId: this.userId
+            }
+          })
+          .then(res => {
+            this.listItem = [];
+            $(".page-box")
+              .children()
+              .remove();
+            var sen = res.data.segment;
+            for (let i = 0; i < sen.length; i++) {
+              this.listItem.push({
+                segment: sen[i].segment,
+                simDegree: parseFloat(sen[i].simDegree * 100).toFixed(2),
+                simAuto: parseFloat(sen[i].simAuto * 100).toFixed(2),
+                senId: sen[i].senId
+              });
+            }
+            this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+            this.n += 1;
+            for (let j = this.n; j < this.pageAll; j++) {
+              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
+            }
+            // c ：当前页码 ，t：总页数 s：第一页码
+            if (this.pageNow > 3) {
+              if (this.pageNow + 2 <= this.pageAll) {
+                this.s = this.pageNow - 2;
+              } else {
+                this.s = this.pageAll - 4;
+                this.s = this.s > 0 ? this.s : 1;
+              }
+            }
+            $(".page-num")
+              .eq(this.s)
+              .addClass("page-select");
+          });
+      }
+    },
+    prev() {
+      if (this.pageNow == 1) {
+        return;
+      } else {
+        this.pageNow -= 1;
+        this.$http
+          .get("api/v1/paper/loadSegment.html", {
+            params: {
+              docCheckId: this.docCheckId,
+              pageNow: this.pageNow,
+              pageSize: this.pageSize
+            },
+            headers: {
+              wpstoken: this.wpstoken,
+              userId: this.userId
+            }
+          })
+          .then(res => {
+            this.listItem = [];
+            $(".page-box")
+              .children()
+              .remove();
+            var sen = res.data.segment;
+            for (let i = 0; i < sen.length; i++) {
+              this.listItem.push({
+                segment: sen[i].segment,
+                simDegree: parseFloat(sen[i].simDegree * 100).toFixed(2),
+                simAuto: parseFloat(sen[i].simAuto * 100).toFixed(2),
+                senId: sen[i].senId
+              });
+            }
+            this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+            this.n -= 1;
+            for (let j = this.n; j < this.pageAll; j++) {
+              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
+            }
+            // c ：当前页码 ，t：总页数 s：第一页码
+            if (this.pageNow > 3) {
+              if (this.pageNow + 2 <= this.pageAll) {
+                this.s = this.pageNow - 2;
+              } else {
+                this.s = this.pageAll - 4;
+                this.s = this.s > 0 ? this.s : 1;
+              }
+            }
+            $(".page-num")
+              .eq(this.s)
+              .addClass("page-select");
+          });
+      }
+    },
+    routeSource(data) {
+      this.$router.push({
+        path: "/source",
+        query: {
+          senId: data,
+          docId: this.$route.query.docCheckId
+        }
+      });
     }
   }
 };
@@ -113,6 +269,16 @@ export default {
 .btn-box button:active {
   background: #2e69b3;
 }
+.btn-box button:disabled {
+  background: rgba(59, 122, 202, 0.4);
+  color: #ffffff;
+}
+.fragment-btn:active {
+  background: #2e69b3;
+}
+.fragment-btn:hover {
+  background: #548ed7;
+}
 .check-box {
   margin-right: 0.67rem;
 }
@@ -133,6 +299,10 @@ export default {
   color: #696969;
   border-bottom: 2px solid #fff;
   letter-spacing: 0.28px;
+}
+.fragment-div {
+  max-height: 45.32rem;
+  overflow-y: auto;
 }
 .full-div {
   color: #888888;
@@ -158,15 +328,18 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 21.15rem;
+  width: 19.65rem;
 }
 .fragment-box {
   min-width: 25.67rem;
-  height: 11.33rem;
+  min-height: 11.33rem;
   background: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
   margin: 1.25rem 1.67rem 0;
+}
+.fragment-box:last-of-type {
+  margin-bottom: 2.58rem;
 }
 .fragment-01 {
   height: 1.83rem;
@@ -213,5 +386,25 @@ export default {
   color: #888888;
   letter-spacing: 0.28px;
   margin: 0 0.67rem 1.25rem;
+}
+.paging {
+  height: 1.33rem;
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #696969;
+  letter-spacing: 0.28px;
+  text-align: center;
+  line-height: 1.33rem;
+}
+.paging span {
+  height: 1.33rem;
+  line-height: 1.33rem;
+  display: inline-block;
+}
+.page-box {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 6rem;
 }
 </style>

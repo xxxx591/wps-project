@@ -20,30 +20,8 @@
   </div>
 </template>
 <script>
-function StringBuffer() {
-  this.__strings__ = new Array();
-}
-StringBuffer.prototype.append = function(str) {
-  this.__strings__.push(str);
-  return this; //方便链式操作
-};
-StringBuffer.prototype.toString = function() {
-  return this.__strings__.join("");
-};
-function replaceBlank(content) {
-  var result = new StringBuffer();
-  for (var i = 0; i < content.length; i++) {
-    var d = content.charAt(i);
-    var patt1 = new RegExp(/\s+/g);
-    if (patt1.test(d)) {
-      result.append("&nbsp;");
-    } else {
-      result.append(d);
-    }
-  }
-  return result.toString();
-}
 import logoTab from "@/components/logo/logoTab";
+import { StringBuffer, replaceBlank } from "../state/index";
 export default {
   name: "fullTxt",
   data() {
@@ -53,7 +31,9 @@ export default {
       docCheckId: null,
       balance: null,
       wpstoken: null,
-      xsd: null
+      xsd: null,
+      reviseStatus:'',
+      status:''
     };
   },
   components: {
@@ -69,7 +49,7 @@ export default {
       .get("api/v1/paper/index.html", {
         params: {
           userId: this.userId,
-          docCheckId: this.$route.query.docCheckId
+          docCheckId: this.docCheckId
         },
         headers: {
           wpstoken: this.wpstoken,
@@ -77,7 +57,12 @@ export default {
         }
       })
       .then(res => {
+        console.log(res);
+        if (res.data.autoStatus == "1") {
+          $(".robot-box").attr("disabled", "disabled");
+        }
         this.balance = res.data.balance;
+        this.status = res.data.autoStatus;
         if (
           res.data.reviseStatus == "success" &&
           res.data.status == "success"
@@ -129,7 +114,7 @@ export default {
                       }
                     }
                     paraHtml.append(
-                      '<a href="/#/fragment?senId=' +
+                      '<a href="/#/source?senId=' +
                         sen.senId +
                         "&docId=" +
                         res.data.docResult.docCheckId +
@@ -163,11 +148,19 @@ export default {
   updated: function() {},
   methods: {
     returnChange(data) {
-      console.log(data);
-      this.$router.go(-1);
+      console.log('返回到检测列表');
+      this.$router.push({path:'/viewReport'});
     },
     routerTo() {
-      this.$router.push({ path: "/source", query: { docId: this.docCheckId } });
+      this.$router.push({
+        path: "/fragment",
+        query: {
+          docCheckId: this.docCheckId,
+          xsd: this.xsd,
+          balance: this.balance,
+          status:this.status
+        }
+      });
     }
   }
 };
@@ -195,6 +188,10 @@ export default {
 }
 .btn-box button:active {
   background: #2e69b3;
+}
+.btn-box button:disabled {
+  background: rgba(59, 122, 202, 0.4);
+  color: #ffffff;
 }
 .check-box {
   margin-right: 0.67rem;
