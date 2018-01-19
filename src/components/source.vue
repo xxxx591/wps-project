@@ -3,8 +3,9 @@
       <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
       <div class="full-content">
           <div class="btn-box">
-            <button class="check-box">实时查重</button>
-            <button class="robot-box">机器人降重</button>
+            <button class="check-box" @click="DupCheck">实时查重</button>
+            <button class="robot-box" v-if="cut">机器人降重</button>
+            <button class="robot-box" v-else  @click="robotRouter">降重结果预览</button>
           </div>
           <div class="title-box">
             <span class="xsd-title">您的语句（相似度：<span class="xsd">&nbsp;{{xsd}}%</span>） </span>
@@ -13,34 +14,29 @@
           <div class="original-text">
             {{content}}
           </div>
+          <div v-if="showSuggest">
+            <div class="title-box">
+              <span class="xsd-title">修改建议（相似度：<span class="xsd">&nbsp;{{simAuto}}%</span>） </span>
+              
+            </div>
+            <div class="original-text ysblue">
+              {{suggest}}
+            </div>
+          </div>
           <p class="content-num">
             找到相似内容：{{contentSimilarity}}个
           </p>
           <div class="source-div">
-              <!-- <ul>
-                <li class="source-box">
-                  <div class="source-01">
-                    <span class="num">1</span>
-                    <span class="source-title">相似度：<span class="red">22%</span></span>
-                    </div>
-                    <p class="source-02">相似内容片断：</p>
-                    <div class="source-03">
-...在选择《九型人格管理学》作为通选课之前，<span class="red">我对这门课也有耳闻，限于对此课程的一些的表面内容，比如它把人分为九</span>个类型、与管理有关等。仅是这些也引起我的兴趣去选择《九型人格管理学》…
-                    </div>
-                    <div class="source-04">
-                      <p>来源：PaperTime云论文库</p>
-                      <p>标题：《测试文件》</p>
-                      <p>链接：<a href="javascript:;" class="source-04-01">http://www.baidu.com</a></p>
-                    </div>
-                </li>
-              </ul> -->
+
           </div>
       </div>
+      <current-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:DupChange="DupChange" :docCheckId="docCheckId"></current-cost>
   </div>
 </template>
 <script>
 import logoTab from "@/components/logo/logoTab";
 import { StringBuffer, replaceBlank } from "../state/index";
+import currentCost from "@/components/pop/currentcost";
 export default {
   name: "fullTxt",
   data() {
@@ -53,11 +49,17 @@ export default {
       sendId: null,
       contentSimilarity: null,
       content: "",
-      xsd: null
+      xsd: null,
+      cut: true,
+      suggest: null,
+      simAuto: "",
+      showSuggest: true,
+      panelShow: false
     };
   },
   components: {
-    logoTab
+    logoTab,
+    currentCost
   },
   mounted: function() {
     var store = window.sessionStorage;
@@ -66,9 +68,8 @@ export default {
     this.docCheckId = this.$route.query.docId;
     this.sendId = this.$route.query.senId;
     if ((this.$route.query.status = "1")) {
-      $(".robot-box").attr("disabled", "disabled");
+      this.cut = !this.cut;
     }
-    var that = this;
     this.$http
       .get("api/v1/paper/index.html", {
         params: {
@@ -115,13 +116,20 @@ export default {
                     // 添加一个判断 senId  和 router 带过来的是不是一样
                     if (sen.senId == this.sendId) {
                       if (sen.simResultList.length > 0) {
+                        this.content = para.content.substring(
+                          sen.startOffset,
+                          sen.endOffset
+                        );
                         paraHtml.append('<div class="source-div">');
                         paraHtml.append("<ul>");
                         for (let si = 0; si < sen.simResultList.length; si++) {
                           this.contentSimilarity = sen.simResultList.length;
                           this.xsd = parseFloat(sen.simDegree * 100).toFixed(2);
                           var sim = sen.simResultList[si];
-                          this.content = sim.simSentence;
+                          this.suggest = sen.suggest;
+                          this.simAuto = parseFloat(sen.simAuto * 100).toFixed(
+                            2
+                          );
                           paraHtml.append("<li  class='source-box'>");
                           paraHtml.append('<div class="source-01">');
                           paraHtml.append(
@@ -136,7 +144,9 @@ export default {
                               "%</span>"
                           );
                           paraHtml.append("</div>");
-                          paraHtml.append('<p class="source-02">相似内容片段：</p>');
+                          paraHtml.append(
+                            '<p class="source-02">相似内容片段：</p>'
+                          );
                           paraHtml.append(
                             '<p class="source-03">' + sim.simSegment + "</p>"
                           );
@@ -159,10 +169,14 @@ export default {
                                   "》</p>"
                               );
                               paraHtml.append(
-                                '<p class="source-04">年份： ' + titles[3] + "</p>"
+                                '<p class="source-04">年份： ' +
+                                  titles[3] +
+                                  "</p>"
                               );
                               paraHtml.append(
-                                '<p class="source-04">作者： ' + titles[1] + "</p>"
+                                '<p class="source-04">作者： ' +
+                                  titles[1] +
+                                  "</p>"
                               );
                             } else {
                               if (pageInfo.source == 3) {
@@ -213,6 +227,11 @@ export default {
                 }
               }
               $(".source-div").html(paraHtml.toString());
+              if (this.suggest == null) {
+                this.showSuggest = false;
+              } else {
+                this.showSuggest = true;
+              }
             });
         }
       });
@@ -222,6 +241,22 @@ export default {
     returnChange(data) {
       console.log(data);
       this.$router.go(-1);
+    },
+    robotRouter() {
+      this.$router.push({
+        path: "/robotTxt",
+        query: { docId: this.docCheckId }
+      });
+    },
+    DupCheck() {
+      this.panelShow = !this.panelShow;
+    },
+    DupChange(data) {
+      this.panelShow = !this.panelShow;
+      this.$router.push({
+        path: "/fullTxt",
+        query: { docCheckId: this.docCheckId }
+      });
     }
   }
 };

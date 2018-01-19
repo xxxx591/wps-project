@@ -19,7 +19,7 @@
         开始全文查重
       </div>
       <p class="remind-title"><i class="icon icon-remind"></i>对于新用户，系统赠送10000字免费体验。</p>
-      <router-link to="/" class="history">历史记录</router-link>
+      <router-link to="/viewReport" class="history" >历史记录</router-link>
     </div>
     <frist-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:submitChange="submitChange"></frist-cost>
   </div>
@@ -72,10 +72,10 @@ export default {
       this.$router.push({
         path: "/loading",
         query: {
-          docCheckId: data,
+          docCheckId: data
         }
       });
-    }
+    },
   }
 };
 </script>

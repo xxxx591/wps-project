@@ -3,27 +3,24 @@
       <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
       <div class="full-content">
         <div class="btn-box">
-          <button class="check-box">实时查重</button>
-          <button class="robot-box">机器人降重</button>
+          <button class="check-box" @click="DupCheck">实时查重</button>
+          <button class="robot-box">降重结果预览</button>
         </div>
-          <p class="full-p">
-              <span class="content-left">全文标红</span>
-              <span class="content-right">相似片段</span>
-          </p>
           <div class="title-box">
-            <span class="xsd-title">相似度 <span class="xsd">&nbsp;95%</span></span>
+            <span class="xsd-title">降重后相似度 <span class="xsd">&nbsp;{{xsd}}%</span></span>
             <p class="title-box-content">绿色文字表示机器人修改</p>
           </div>
           <div class="full-div">
-              涵盖所有中英文类别，<span class="green">包括哲学、经济学、管理学、</span>法学、社会科学、教育学、文学、艺术学、历史学、理学、工学、农学、医学、政治学、军事学等。
               
-             
           </div>
+          <current-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:DupChange="DupChange" :docCheckId="docCheckId"></current-cost>
       </div>
   </div>
 </template>
 <script>
 import logoTab from "@/components/logo/logoTab";
+import robotCost from "@/components/pop/robotcost";
+import currentCost from "@/components/pop/currentcost";
 export default {
   name: "fullTxt",
   data() {
@@ -32,23 +29,28 @@ export default {
       userId: null,
       docCheckId: null,
       balance: null,
-      wpstoken: null
+      wpstoken: null,
+      panelShow: false,
+      xsd: null
     };
   },
   components: {
-    logoTab
+    logoTab,
+    robotCost,
+    currentCost
   },
   mounted: function() {
     var store = window.sessionStorage;
     this.userId = store.userId;
     this.wpstoken = store.wpstoken;
-    this.docCheckId = this.$route.query.docCheckId;
+    this.docCheckId = this.$route.query.docId;
+    this.balance = this.$route.query.balance;
     var that = this;
     this.$http
-      .get("api/v1/paper/index.html", {
+      .get("api/v1/paper/autoPreview.html", {
         params: {
           userId: this.userId,
-          docCheckId: this.$route.query.docCheckId
+          docCheckId: this.docCheckId
         },
         headers: {
           wpstoken: this.wpstoken,
@@ -57,7 +59,10 @@ export default {
       })
       .then(res => {
         console.log(res);
-        this.balance = res.data.balance;
+        this.xsd = (
+          parseFloat(res.data.copyChar / res.data.checkChar) * 100
+        ).toFixed(2);
+        $(".full-div").html(res.data.preview);
       });
   },
   updated: function() {},
@@ -65,6 +70,16 @@ export default {
     returnChange(data) {
       console.log(data);
       this.$router.go(-1);
+    },
+    DupCheck() {
+      this.panelShow = !this.panelShow;
+    },
+    DupChange(data) {
+      this.panelShow = !this.panelShow;
+      this.$router.push({
+        path: "/fullTxt",
+        query: { docCheckId: this.docCheckId }
+      });
     }
   }
 };
@@ -123,7 +138,6 @@ export default {
   letter-spacing: 0.28px;
 }
 
-
 .title-box {
   height: 2.5rem;
   line-height: 2.5rem;
@@ -144,6 +158,6 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 21.15rem;
+  width: 16.65rem;
 }
 </style>

@@ -3,8 +3,9 @@
       <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
       <div class="full-content">
         <div class="btn-box">
-          <button class="check-box">实时查重</button>
-          <button class="robot-box">机器人降重</button>
+          <button class="check-box" @click="DupCheck">实时查重</button>
+          <button class="robot-box" v-if="cut" @click="robotCost">机器人降重</button>
+          <button class="robot-box" v-else  @click="robotRouter">降重结果预览</button>
         </div>
           <p class="full-p">
               <span class="content-left">全文标红</span>
@@ -12,16 +13,20 @@
           </p>
           <div class="title-box">
             <span class="xsd-title">相似度 <span class="xsd">&nbsp;{{xsd}}%</span></span>
-            <p class="title-box-content">使用实时查重降低相似度~~~~~~</p>
+            <p class="title-box-content">使用机器人降重降低相似度~~~~~~</p>
           </div>
           <div class="paper-content-box">
           </div>
       </div>
+      <robot-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:submitChange="submitChange" :docCheckId="docCheckId"></robot-cost>
+      <current-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:DupChange="DupChange" :docCheckId="docCheckId"></current-cost>
   </div>
 </template>
 <script>
 import logoTab from "@/components/logo/logoTab";
 import { StringBuffer, replaceBlank } from "../state/index";
+import robotCost from "@/components/pop/robotcost";
+import currentCost from "@/components/pop/currentcost";
 export default {
   name: "fullTxt",
   data() {
@@ -33,11 +38,15 @@ export default {
       wpstoken: null,
       xsd: null,
       reviseStatus: "",
-      status: ""
+      status: "",
+      cut: true,
+      panelShow: false
     };
   },
   components: {
-    logoTab
+    logoTab,
+    robotCost,
+    currentCost
   },
   mounted: function() {
     var store = window.sessionStorage;
@@ -59,7 +68,7 @@ export default {
       .then(res => {
         console.log(res);
         if (res.data.autoStatus == "1") {
-          $(".robot-box").attr("disabled", "disabled");
+          this.cut = !this.cut;
         }
         this.balance = res.data.balance;
         this.status = res.data.autoStatus;
@@ -82,7 +91,8 @@ export default {
             .then(res => {
               console.log(res);
               this.xsd = Number(
-                (res.data.docResult.copyChar /
+                (
+                  res.data.docResult.copyChar /
                   res.data.docResult.checkChar *
                   100
                 )
@@ -118,7 +128,7 @@ export default {
                       '<a href="/#/source?senId=' +
                         sen.senId +
                         "&docId=" +
-                        res.data.docResult.docCheckId +
+                        this.docCheckId +
                         "&staus=" +
                         this.status +
                         '" class="' +
@@ -163,6 +173,32 @@ export default {
           balance: this.balance,
           status: this.status
         }
+      });
+    },
+    robotRouter() {
+      this.$router.push({
+        path: "/robotTxt",
+        query: { docId: this.docCheckId ,balance:this.balance}
+      });
+    },
+    robotCost() {
+      this.panelShow = !this.panelShow;
+    },
+    submitChange(data) {
+      this.panelShow = !this.panelShow;
+      this.$router.push({
+        path: "/robotTxt",
+        query: { docId: this.docCheckId ,balance:this.balance}
+      });
+    },
+     DupCheck() {
+      this.panelShow = !this.panelShow;
+    },
+    DupChange(data) {
+      this.panelShow = !this.panelShow;
+      this.$router.push({
+        path: "/fullTxt",
+        query: { docCheckId: this.docCheckId }
       });
     }
   }

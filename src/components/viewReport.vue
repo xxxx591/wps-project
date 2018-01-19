@@ -72,6 +72,7 @@ export default {
   },
   methods: {
     checkDetails(event, state) {
+      console.log(event);
       this.docCheckId = event;
       this.state = state;
       if (state == 0 || state == 1) {

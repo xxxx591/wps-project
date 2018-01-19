@@ -3,16 +3,17 @@
       <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
       <div class="full-content">
         <div class="btn-box">
-          <button class="check-box">实时查重</button>
-          <button class="robot-box">机器人降重</button>
+          <button class="check-box" @click="DupCheck">实时查重</button>
+          <button class="robot-box" v-if="cut">机器人降重</button>
+          <button class="robot-box" v-else  @click="robotRouter">降重结果预览</button>
         </div>
           <p class="full-p">
               <span class="content-left" @click="allPaper">全文标红</span>
               <span class="content-right">相似片段</span>
           </p>
           <div class="title-box">
-            <span class="xsd-title">相似度 <span class="xsd">&nbsp;{{this.$route.query.xsd}}%</span></span>
-            <p class="title-box-content">绿色文字表示机器人修改</p>
+            <span class="xsd-title">总相似度 <span class="xsd">&nbsp;{{this.$route.query.xsd}}%</span></span>
+            <p class="title-box-content">使用机器人降重降低相似度~~~~~~</p>
           </div>
           <div class="fragment-div">
               <ul>
@@ -22,7 +23,7 @@
                     <span class="fragment-title">相似度：<span class="colors">{{list.simDegree}}%</span></span>
                     <button class="fragment-btn" @click="routeSource(list.senId)">相似来源</button>
                     </div>
-                    <p class="fragment-02">相似内容片断：</p>
+                    <p class="fragment-02">相似内容片段：</p>
                     <div class="fragment-03">
                       ...<span class="colors">{{list.segment}}</span>...
                     </div>
@@ -37,10 +38,12 @@
               </p>
           </div>
       </div>
+      <current-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:DupChange="DupChange" :docCheckId="docCheckId"></current-cost>
   </div>
 </template>
 <script>
 import logoTab from "@/components/logo/logoTab";
+import currentCost from "@/components/pop/currentcost";
 export default {
   name: "fullTxt",
   data() {
@@ -57,10 +60,12 @@ export default {
       pageAll: null,
       n: 0,
       s: 0,
+      cut: true,
+      panelShow: false
     };
   },
   components: {
-    logoTab
+    logoTab,currentCost
   },
   mounted: function() {
     var store = window.sessionStorage;
@@ -69,8 +74,8 @@ export default {
     this.docCheckId = this.$route.query.docCheckId;
     this.balance = this.$route.query.balance;
     this.sendId = this.$route.query.senId;
-    if (this.$route.query.status =='1') {
-      $(".robot-box").attr("disabled", "disabled");
+    if (this.$route.query.status == "1") {
+      this.cut = !this.cut;
     }
     this.$http
       .get("api/v1/paper/loadSegment.html", {
@@ -116,8 +121,8 @@ export default {
   updated: function() {},
   methods: {
     returnChange(data) {
-      console.log('返回到检测列表');
-      this.$router.push({path:'/viewReport'});
+      console.log("返回到检测列表");
+      this.$router.push({ path: "/viewReport" });
     },
     allPaper() {
       this.$router.push({
@@ -230,8 +235,26 @@ export default {
         path: "/source",
         query: {
           senId: data,
-          docId: this.$route.query.docCheckId
+          docId: this.$route.query.docCheckId,
+          status: this.$route.query.status
         }
+      });
+    },
+    robotRouter() {
+      this.$router.push({
+        path: "/robotTxt",
+        query: { docId: this.docCheckId }
+      });
+    },
+    DupCheck() {
+      this.panelShow = !this.panelShow;
+      console.log(this.panelShow);
+    },
+    DupChange(data) {
+      this.panelShow = !this.panelShow;
+      this.$router.push({
+        path: "/fullTxt",
+        query: { docCheckId: this.docCheckId }
       });
     }
   }
@@ -328,11 +351,10 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 19.65rem;
+  width: 18.65rem;
 }
 .fragment-box {
   min-width: 25.67rem;
-  min-height: 11.33rem;
   background: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
@@ -388,7 +410,6 @@ export default {
   margin: 0 0.67rem 1.25rem;
 }
 .paging {
-  height: 1.33rem;
   font-family: MicrosoftYaHei;
   font-size: 12px;
   color: #696969;
