@@ -301,7 +301,7 @@ export default {
   letter-spacing: 0.28px;
 }
 .source-div ul {
-  max-height: 45.32rem;
+  max-height: 47.59rem;
   overflow-y: auto;
 }
 .source-box {

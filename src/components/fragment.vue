@@ -32,7 +32,7 @@
               <p class="paging">
                 <span class="prev" @click="prev">上一页</span>
                 <span class="page-box">
-                  <!-- <i v-for="n in this.pageAll" :key="n.index" class="">{{n}}</i><i>...</i> -->
+
                 </span>
                 <span class="next" @click="next">下一页</span>
               </p>
@@ -65,7 +65,8 @@ export default {
     };
   },
   components: {
-    logoTab,currentCost
+    logoTab,
+    currentCost
   },
   mounted: function() {
     var store = window.sessionStorage;
@@ -421,6 +422,7 @@ export default {
   height: 1.33rem;
   line-height: 1.33rem;
   display: inline-block;
+  cursor: pointer;
 }
 .page-box {
   white-space: nowrap;

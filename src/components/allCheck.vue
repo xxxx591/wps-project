@@ -41,12 +41,14 @@ export default {
         {
           class: "icon-robot",
           title: " 机器人降重",
-          content: "对于重复率高的句子，机器人给出修改建议 可以一键替换原文，省心，省力，高效。"
+          content:
+            "对于重复率高的句子，机器人给出修改建议 可以一键替换原文，省心，省力，高效。"
         },
         {
           class: "icon-current-time",
           title: "在线改重+实时查重",
-          content: "边修改边检测，哪里相似，修改哪里，通过 哪里，每次实时查重只对当前修改的句子计费。"
+          content:
+            "边修改边检测，哪里相似，修改哪里，通过 哪里，每次实时查重只对当前修改的句子计费。"
         }
       ],
       panelShow: false,
@@ -75,7 +77,7 @@ export default {
           docCheckId: data
         }
       });
-    },
+    }
   }
 };
 </script>
@@ -136,6 +138,12 @@ export default {
   color: #fff;
   cursor: pointer;
   letter-spacing: -0.34px;
+}
+.btn:hover {
+  background: #548ed7;
+}
+.btn:active {
+  background: #2e69b3;
 }
 .history {
   display: block;

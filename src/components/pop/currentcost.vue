@@ -13,7 +13,8 @@
             <li>余额字数<span class="right-content red-content">{{balance}}<span style="color:#888;">字</span></span></li>
           </ul>
         </div>
-        <p class="remind-content"><i class="icon icon-remind"></i> 此次提交扣费<span class="red-content">{{wordCount}}</span>字，您的余额<span class="red-content">{{balance}}</span>字。</p>
+        <p class="remind-content" v-if="showBalance"><i class="icon icon-remind"></i> 此次提交扣费<span class="red-content">{{wordCount}}</span>字，您的余额<span class="red-content">{{balance}}</span>字。</p>
+        <p class="remind-content" v-else><i class="icon icon-remind"></i> 您的余额不足，请充值</p>
       </div>
       <p class="img-box" v-else>
             <img src="../../assets/loading.gif" alt="" srcset="">
@@ -22,7 +23,8 @@
       <p class="green-content"> 实时查重<span class="red-content">计费标准</span>：根据当前修改的句子（标记成蓝色）的字数计费.</p>
       <div class="btn-box">
         <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
-        <a href="javascript:;" class="btn btn-success" @click="submit">确定</a>
+        <a href="javascript:;" class="btn btn-success" @click="submit" v-if="showBalance">确定</a>
+        <a href="javascript:;" class="btn btn-success" v-else>充值</a>
       </div>
     </div>
   </div>
@@ -34,13 +36,14 @@ export default {
   data() {
     return {
       msg: "在线改重",
-      balance: '',
-      atPresent: '',
-      takeOut: '',
-      wordCount: '',
+      balance: "",
+      atPresent: "",
+      takeOut: "",
+      wordCount: "",
       reviseId: "",
       status: "",
-      show: true
+      show: true,
+      showBalance: true
     };
   },
   props: {
@@ -85,7 +88,7 @@ export default {
       this.$emit("update:panelShow", false);
     },
     submit() {
-      if (this.status == "success") {
+      if (this.status == "success" && this.balance > this.wordCount) {
         this.show = false;
         this.$http
           .get("api/v1/check/real/submit.html", {
@@ -104,13 +107,16 @@ export default {
             console.log(res);
             this.$emit("DupChange", res.data.status);
           });
+      } else {
+        this.showBalance = !this.showBalance;
       }
+      // this.showBalance = !this.showBalance;  余额小于检测字数时情况
     }
   }
 };
 </script>
 <style scoped>
-.img-box{
+.img-box {
   text-align: center;
 }
 </style>

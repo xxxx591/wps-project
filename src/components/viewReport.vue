@@ -14,7 +14,13 @@
           <span id="check-details"><button @click="checkDetails(list.docCheckId,list.dataState)">详情</button></span>
         </li>
       </ul>
-      <p class="paging">当前页{{pageNow}}，共{{pageAll}}页<span @click="next">下一页</span><span @click="prev">上一页</span></p>
+      <p class="paging">
+        <span class="prev" @click="prev">上一页</span>
+        <span class="page-box">
+          
+        </span>
+        <span class="next" @click="next">下一页</span>
+      </p>
     </div>
   </div>
 </template>
@@ -34,7 +40,9 @@ export default {
       pageAll: 123,
       wpstoken: null,
       state: null,
-      viewTrue:true
+      viewTrue: true,
+      n: 0,
+      s: 0
     };
   },
   components: {
@@ -57,7 +65,8 @@ export default {
         }
       })
       .then(res => {
-        // console.log(res);
+        this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+        console.log(res);
         for (let i = 0; i < res.data.list.length; i++) {
           this.listItem.push({
             title: res.data.list[i].title,
@@ -66,8 +75,29 @@ export default {
             dataState: res.data.list[i].status
           });
         }
+        if (this.pageNow > 3) {
+          if (this.pageNow + 2 >= this.pageAll) {
+            this.n = this.pageNow - 2;
+          } else {
+            this.n = this.pageAll - 4;
+            this.n = this.n > 0 ? this.n : 1;
+          }
+        }
+        for (let n = 0; n < this.pageAll; n++) {
+          $(".page-box").append('<i class="page-num">' + (n + 1) + "</i>");
+        }
+        $(".page-num")
+          .eq(this.n)
+          .addClass("page-select")
+          .siblings(".page-num")
+          .removeClass("page-select");
+
         // console.log(this.listItem);
-        this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+        if (res.data.page.totalRow % 10 == 0) {
+          this.pageAll = parseInt(res.data.page.totalRow / 10);
+        } else {
+          this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
+        }
       });
   },
   methods: {
@@ -94,7 +124,6 @@ export default {
       }
     },
     prev() {
-      var that = this;
       if (this.pageNow == 1) {
         return;
       } else {
@@ -113,6 +142,9 @@ export default {
           })
           .then(res => {
             this.listItem = [];
+            $(".page-box")
+              .children()
+              .remove();
             for (let i = 0; i < res.data.list.length; i++) {
               this.listItem.push({
                 title: res.data.list[i].title,
@@ -121,11 +153,26 @@ export default {
                 dataState: res.data.list[i].status
               });
             }
+            this.n -= 1;
+            for (let j = this.n; j < this.pageAll; j++) {
+              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
+            }
+            // c ：当前页码 ，t：总页数 s：第一页码
+            if (this.pageNow > 3) {
+              if (this.pageNow + 2 <= this.pageAll) {
+                this.s = this.pageNow - 2;
+              } else {
+                this.s = this.pageAll - 4;
+                this.s = this.s > 0 ? this.s : 1;
+              }
+            }
+            $(".page-num")
+              .eq(this.s)
+              .addClass("page-select");
           });
       }
     },
     next() {
-      var that = this;
       if (this.pageNow < this.pageAll) {
         this.pageNow += 1;
         this.$http
@@ -142,6 +189,9 @@ export default {
           })
           .then(res => {
             this.listItem = [];
+            $(".page-box")
+              .children()
+              .remove();
             for (let i = 0; i < res.data.list.length; i++) {
               this.listItem.push({
                 title: res.data.list[i].title,
@@ -150,6 +200,22 @@ export default {
                 dataState: res.data.list[i].status
               });
             }
+            this.n += 1;
+            for (let j = this.n; j < this.pageAll; j++) {
+              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
+            }
+            // c ：当前页码 ，t：总页数 s：第一页码
+            if (this.pageNow > 3) {
+              if (this.pageNow + 2 <= this.pageAll) {
+                this.s = this.pageNow - 2;
+              } else {
+                this.s = this.pageAll - 4;
+                this.s = this.s > 0 ? this.s : 1;
+              }
+            }
+            $(".page-num")
+              .eq(this.s)
+              .addClass("page-select");
           });
       } else {
         return;
@@ -181,6 +247,9 @@ export default {
   width: 32%;
   font-size: 1.4rem;
 }
+#list-heard span:last-of-type {
+  text-align: center;
+}
 .list-content {
   height: 2.8rem;
   line-height: 2.8rem;
@@ -194,6 +263,9 @@ export default {
   white-space: nowrap;
   overflow: hidden;
 }
+.list-content span:last-of-type {
+  text-align: center;
+}
 #check-details button {
   border: 0;
   outline: none;
@@ -204,18 +276,23 @@ export default {
   cursor: pointer;
 }
 .paging {
-  font-weight: 600;
-  padding: 1rem;
-  height: 2.6rem;
-  line-height: 2.6rem;
+  font-family: MicrosoftYaHei;
+  font-size: 12px;
+  color: #696969;
+  letter-spacing: 0.28px;
+  text-align: center;
+  line-height: 1.33rem;
 }
 .paging span {
-  float: right;
-  background: #3b7aca;
+  height: 1.33rem;
+  line-height: 1.33rem;
+  display: inline-block;
   cursor: pointer;
-  color: #fff;
-  margin-right: 1rem;
-  padding: 0 0.5rem;
-  border-radius: 0.4rem;
+}
+.page-box {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 6rem;
 }
 </style>

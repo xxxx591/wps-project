@@ -14,7 +14,8 @@
               <li>剩余字数<span class="right-content red-content">{{balance - (markRed*4)}}<span style="color:#888;">字</span></span></li>
             </ul>
           </div>
-          <p class="remind-content"><i class="icon icon-remind"></i> 此次提交扣费<span class="red-content">{{markRed*4}}</span>字，您的余额<span class="red-content">{{balance}}</span>字。</p>
+          <p class="remind-content" v-if="showBalance"><i class="icon icon-remind"></i> 此次提交扣费<span class="red-content">{{markRed*4}}</span>字，您的余额<span class="red-content">{{balance}}</span>字。</p>
+          <p class="remind-content" v-else><i class="icon icon-remind"></i> 您的余额不足，请充值</p>
         </div>
         <p class="img-box" v-else>
             <img src="../../assets/loading.gif" alt="" srcset="">
@@ -24,7 +25,8 @@
       <p class="green-content"> 机器人降重<span class="red-content">计费标准</span>：1. 全文查重前付费按照全文字数*1计费 2. 全文查重后付费按照标红字数*4计费</p>
       <div class="btn-box">
         <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
-        <a href="javascript:;" class="btn btn-success" @click="submit">确定</a>
+        <a href="javascript:;" class="btn btn-success" @click="submit" v-if="showBalance">确定</a>
+        <a href="javascript:;" class="btn btn-success" v-else>充值</a>
       </div>
     </div>
   </div>
@@ -40,7 +42,8 @@ export default {
       markRed: 3600,
       takeOut: 3600,
       status:'',
-      show:true
+      show:true,
+      showBalance:true
     };
   },
   props: {
@@ -83,6 +86,8 @@ export default {
             .then(res => {
               this.$emit("submitChange", res.data.status);
             });
+        } else{
+          this.showBalance = !this.showBalance;
         }
     }
   },
