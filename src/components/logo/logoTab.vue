@@ -40,16 +40,16 @@
 .selected {
   background: #f1f1f2;
 }
-.icon-qq:hover{
+.icon-qq:hover {
   background-position: -196px -467px;
 }
-.icon-qq:active{
-    background-position: -347px -467px;
+.icon-qq:active {
+  background-position: -347px -467px;
 }
-.icon-download:hover{
+.icon-download:hover {
   background-position: -196px -426px;
 }
-.icon-download:active{
+.icon-download:active {
   background-position: -346px -426px;
 }
 </style>
@@ -57,26 +57,27 @@
 export default {
   name: "logotab",
   data() {
-    return {
-      
-    };
+    return {};
   },
   props: {
     balance: {
       type: Number
-    },
-
+    }
   },
   methods: {
     change() {
       this.$emit("returnChange", "返回上一页");
     },
-    changeDownload(e){
-      
-      },
-    changeQq(e){
-      
-      },
+    changeDownload(e) {
+      window.ksoJsAsynCall(
+        "navigateOnNewWindow",
+        { url: "http://www.papertime.cc/download/task/1516097631675.dl" },
+        function(res) {
+          console.log(res);
+        }
+      );
+    },
+    changeQq(e) {}
   }
 };
 </script>

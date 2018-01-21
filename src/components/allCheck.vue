@@ -28,6 +28,7 @@
 <script>
 import logo from "@/components/logo/logo";
 import fristCost from "@/components/pop/fristcost";
+
 export default {
   name: "HelloWorld",
   data() {
@@ -69,6 +70,9 @@ export default {
     showbox() {
       this.panelShow = true;
       console.log(this.userId);
+      window.ksoJsAsynCall("readText", {}, function(res) {
+        console.log(res);
+      });
     },
     submitChange(data) {
       this.$router.push({

@@ -109,7 +109,6 @@ export default {
         this.balance = res.data.balance;
         this.markRed = res.data.jqjcWordCount;
         this.status = res.data.status;
-        
       });
   }
 };

@@ -5,7 +5,8 @@ import App from './App'
 import router from './router'
 import $ from 'jquery'
 import axios from 'axios' 
-
+import base64 from "./state/base64";
+import kso from "./state/kso";
 
 Vue.prototype.$http=axios  
 Vue.config.productionTip = false
