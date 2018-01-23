@@ -1,6 +1,6 @@
 <template>
   <div>
-      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
+      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange" :docCheckId="docCheckId"></logo-tab>
       <div class="full-content">
         <div class="btn-box">
           <button class="check-box" @click="DupCheck">实时查重</button>
@@ -12,7 +12,7 @@
               <span class="content-right">相似片段</span>
           </p>
           <div class="title-box">
-            <span class="xsd-title">总相似度 <span class="xsd">&nbsp;{{this.$route.query.xsd}}%</span></span>
+            <span class="xsd-title">总相似度：<span class="xsd">{{this.$route.query.xsd}}%</span></span>
             <p class="title-box-content">使用机器人降重降低相似度~~~~~~</p>
           </div>
           <div class="fragment-div">
@@ -31,9 +31,8 @@
               </ul>
               <p class="paging">
                 <span class="prev" @click="prev">上一页</span>
-                <span class="page-box">
-
-                </span>
+                <span class="left-view">共{{pageAll}}页</span>
+                <span class="centent-view">当前第{{pageNow}}页</span>
                 <span class="next" @click="next">下一页</span>
               </p>
           </div>
@@ -89,7 +88,6 @@ export default {
       })
       .then(res => {
         var sen = res.data.segment;
-        console.log(res);
         for (let i = 0; i < sen.length; i++) {
           this.listItem.push({
             segment: sen[i].segment,
@@ -99,22 +97,6 @@ export default {
           });
         }
         this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
-        if (this.pageNow > 3) {
-          if (this.pageNow + 2 >= this.pageAll) {
-            this.n = this.pageNow - 2;
-          } else {
-            this.n = this.pageAll - 4;
-            this.n = this.n > 0 ? this.n : 1;
-          }
-        }
-        for (let n = 0; n < this.pageAll; n++) {
-          $(".page-box").append('<i class="page-num">' + (n + 1) + "</i>");
-        }
-        $(".page-num")
-          .eq(this.n)
-          .addClass("page-select")
-          .siblings(".page-num")
-          .removeClass("page-select");
       });
   },
   updated: function() {},
@@ -146,9 +128,6 @@ export default {
           })
           .then(res => {
             this.listItem = [];
-            $(".page-box")
-              .children()
-              .remove();
             var sen = res.data.segment;
             for (let i = 0; i < sen.length; i++) {
               this.listItem.push({
@@ -159,22 +138,6 @@ export default {
               });
             }
             this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
-            this.n += 1;
-            for (let j = this.n; j < this.pageAll; j++) {
-              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
-            }
-            // c ：当前页码 ，t：总页数 s：第一页码
-            if (this.pageNow > 3) {
-              if (this.pageNow + 2 <= this.pageAll) {
-                this.s = this.pageNow - 2;
-              } else {
-                this.s = this.pageAll - 4;
-                this.s = this.s > 0 ? this.s : 1;
-              }
-            }
-            $(".page-num")
-              .eq(this.s)
-              .addClass("page-select");
           });
       }
     },
@@ -197,9 +160,9 @@ export default {
           })
           .then(res => {
             this.listItem = [];
-            $(".page-box")
-              .children()
-              .remove();
+            // $(".page-box")
+            //   .children()
+            //   .remove();
             var sen = res.data.segment;
             for (let i = 0; i < sen.length; i++) {
               this.listItem.push({
@@ -210,22 +173,22 @@ export default {
               });
             }
             this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
-            this.n -= 1;
-            for (let j = this.n; j < this.pageAll; j++) {
-              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
-            }
-            // c ：当前页码 ，t：总页数 s：第一页码
-            if (this.pageNow > 3) {
-              if (this.pageNow + 2 <= this.pageAll) {
-                this.s = this.pageNow - 2;
-              } else {
-                this.s = this.pageAll - 4;
-                this.s = this.s > 0 ? this.s : 1;
-              }
-            }
-            $(".page-num")
-              .eq(this.s)
-              .addClass("page-select");
+            // this.n -= 1;
+            // for (let j = this.n; j < this.pageAll; j++) {
+            //   $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
+            // }
+            // // c ：当前页码 ，t：总页数 s：第一页码
+            // if (this.pageNow > 3) {
+            //   if (this.pageNow + 2 <= this.pageAll) {
+            //     this.s = this.pageNow - 2;
+            //   } else {
+            //     this.s = this.pageAll - 4;
+            //     this.s = this.s > 0 ? this.s : 1;
+            //   }
+            // }
+            // $(".page-num")
+            //   .eq(this.s)
+            //   .addClass("page-select");
           });
       }
     },
@@ -280,7 +243,7 @@ export default {
 .btn-box button {
   background: #3b7aca;
   border-radius: 4px;
-  width: 13.33rem;
+  width: 13rem;
   height: 2.5rem;
   color: #fff;
   cursor: pointer;
@@ -350,7 +313,6 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 18.65rem;
 }
 .fragment-box {
   min-width: 25.67rem;

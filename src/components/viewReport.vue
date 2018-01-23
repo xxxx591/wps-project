@@ -16,9 +16,8 @@
       </ul>
       <p class="paging">
         <span class="prev" @click="prev">上一页</span>
-        <span class="page-box">
-          
-        </span>
+        <span class="left-view">共{{pageAll}}页</span>
+        <span class="centent-view">当前第{{pageNow}}页</span>
         <span class="next" @click="next">下一页</span>
       </p>
     </div>
@@ -72,23 +71,6 @@ export default {
             dataState: res.data.list[i].status
           });
         }
-        if (this.pageNow > 3) {
-          if (this.pageNow + 2 >= this.pageAll) {
-            this.n = this.pageNow - 2;
-          } else {
-            this.n = this.pageAll - 4;
-            this.n = this.n > 0 ? this.n : 1;
-          }
-        }
-        for (let n = 0; n < this.pageAll; n++) {
-          $(".page-box").append('<i class="page-num">' + (n + 1) + "</i>");
-        }
-        $(".page-num")
-          .eq(this.n)
-          .addClass("page-select")
-          .siblings(".page-num")
-          .removeClass("page-select");
-
         // console.log(this.listItem);
         if (res.data.page.totalRow % 10 == 0) {
           this.pageAll = parseInt(res.data.page.totalRow / 10);
@@ -139,9 +121,6 @@ export default {
           })
           .then(res => {
             this.listItem = [];
-            $(".page-box")
-              .children()
-              .remove();
             for (let i = 0; i < res.data.list.length; i++) {
               this.listItem.push({
                 title: res.data.list[i].title,
@@ -150,22 +129,6 @@ export default {
                 dataState: res.data.list[i].status
               });
             }
-            this.n -= 1;
-            for (let j = this.n; j < this.pageAll; j++) {
-              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
-            }
-            // c ：当前页码 ，t：总页数 s：第一页码
-            if (this.pageNow > 3) {
-              if (this.pageNow + 2 <= this.pageAll) {
-                this.s = this.pageNow - 2;
-              } else {
-                this.s = this.pageAll - 4;
-                this.s = this.s > 0 ? this.s : 1;
-              }
-            }
-            $(".page-num")
-              .eq(this.s)
-              .addClass("page-select");
           });
       }
     },
@@ -186,9 +149,6 @@ export default {
           })
           .then(res => {
             this.listItem = [];
-            $(".page-box")
-              .children()
-              .remove();
             for (let i = 0; i < res.data.list.length; i++) {
               this.listItem.push({
                 title: res.data.list[i].title,
@@ -197,22 +157,6 @@ export default {
                 dataState: res.data.list[i].status
               });
             }
-            this.n += 1;
-            for (let j = this.n; j < this.pageAll; j++) {
-              $(".page-box").append('<i class="page-num">' + (j + 1) + "</i>");
-            }
-            // c ：当前页码 ，t：总页数 s：第一页码
-            if (this.pageNow > 3) {
-              if (this.pageNow + 2 <= this.pageAll) {
-                this.s = this.pageNow - 2;
-              } else {
-                this.s = this.pageAll - 4;
-                this.s = this.s > 0 ? this.s : 1;
-              }
-            }
-            $(".page-num")
-              .eq(this.s)
-              .addClass("page-select");
           });
       } else {
         return;
@@ -232,6 +176,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+/* .left-view{
+  float: left;
+} */
 #list-heard {
   text-align: left;
   font-weight: 600;
@@ -243,10 +190,9 @@ export default {
   display: inline-block;
   width: 32%;
   font-size: 1.4rem;
-}
-#list-heard span:last-of-type {
   text-align: center;
 }
+
 .list-content {
   height: 2.8rem;
   line-height: 2.8rem;
@@ -291,5 +237,8 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
   width: 6rem;
+}
+.paper-list{
+  padding: 0 0.83rem;
 }
 </style>

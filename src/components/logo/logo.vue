@@ -39,7 +39,7 @@
 .check-btn {
   background: #3b7aca;
   border-radius: 4px;
-  width: 13.33rem;
+  width: 13rem;
   height: 2.5rem;
   color: #fff;
   cursor: pointer;

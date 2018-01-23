@@ -1,6 +1,6 @@
 <template>
   <div>
-      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
+      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange" :docCheckId="docCheckId"></logo-tab>
       <div class="full-content">
           <div class="btn-box">
             <button class="check-box" @click="DupCheck">实时查重</button>
@@ -8,7 +8,7 @@
             <button class="robot-box" v-else  @click="robotRouter">降重结果预览</button>
           </div>
           <div class="title-box">
-            <span class="xsd-title">您的语句（相似度：<span class="xsd">&nbsp;{{xsd}}%</span>） </span>
+            <span class="xsd-title">您的语句（相似度：<span class="xsd">{{xsd}}%</span>） </span>
             
           </div>
           <div class="original-text">
@@ -16,7 +16,7 @@
           </div>
           <div v-if="showSuggest">
             <div class="title-box">
-              <span class="xsd-title">修改建议（相似度：<span class="xsd">&nbsp;{{simAuto}}%</span>） </span>
+              <span class="xsd-title">修改建议（相似度：<span class="xsd">{{simAuto}}%</span>） </span>
               
             </div>
             <div class="original-text ysblue">
@@ -37,6 +37,7 @@
 import logoTab from "@/components/logo/logoTab";
 import { StringBuffer, replaceBlank } from "../state/index";
 import currentCost from "@/components/pop/currentcost";
+
 export default {
   name: "fullTxt",
   data() {
@@ -62,6 +63,104 @@ export default {
     currentCost
   },
   mounted: function() {
+    var pull = (res, sendId, paraHtml) => {
+      for (var i = 0; i < res.data.docResult.paraResultList.length; i++) {
+        var lastIndex = 0;
+        var para = res.data.docResult.paraResultList[i];
+        if (para.senResultList.length > 0) {
+          for (var j = 0; j < para.senResultList.length; j++) {
+            var sen = para.senResultList[j];
+            lastIndex = sen.endOffset;
+            // console.log(sen.senId+'----'+this.sendId);
+            // 添加一个判断 senId  和 router 带过来的是不是一样
+            if (sen.senId == sendId) {
+              if (sen.simResultList.length > 0) {
+                this.content = para.content.substring(
+                  sen.startOffset,
+                  sen.endOffset
+                );
+                paraHtml.append('<div class="source-div">');
+                paraHtml.append("<ul>");
+                for (let si = 0; si < sen.simResultList.length; si++) {
+                  this.contentSimilarity = sen.simResultList.length;
+                  this.xsd = parseFloat(sen.simDegree * 100).toFixed(2);
+                  var sim = sen.simResultList[si];
+                  this.suggest = sen.suggest;
+                  this.simAuto = parseFloat(sen.simAuto * 100).toFixed(2);
+                  paraHtml.append("<li  class='source-box'>");
+                  paraHtml.append('<div class="source-01">');
+                  paraHtml.append("<span class='num'>" + (si + 1) + "</span>");
+                  paraHtml.append("<span class='source-title'>相似度</span>");
+                  paraHtml.append(
+                    "<span class='red'>" +
+                      (parseFloat(sim.simDegree) * 100).toFixed(2) +
+                      "%</span>"
+                  );
+                  paraHtml.append("</div>");
+                  paraHtml.append('<p class="source-02">相似内容片段：</p>');
+                  paraHtml.append(
+                    '<p class="source-03">' + sim.simSegment + "</p>"
+                  );
+                  var pageInfo = res.data.docResult.pageWrapMap[sim.pageId];
+                  if (pageInfo) {
+                    if (pageInfo.source > 0 && pageInfo.source != 3) {
+                      paraHtml.append(
+                        '<p class="source-04">来源(本地数据库)</p>'
+                      );
+                      var titles = pageInfo.title.split("|#|");
+                      paraHtml.append(
+                        '<p class="source-04">篇名：《' + titles[0] + "》</p>"
+                      );
+                      paraHtml.append(
+                        '<p class="source-04">期刊：《' + titles[2] + "》</p>"
+                      );
+                      paraHtml.append(
+                        '<p class="source-04">年份： ' + titles[3] + "</p>"
+                      );
+                      paraHtml.append(
+                        '<p class="source-04">作者： ' + titles[1] + "</p>"
+                      );
+                    } else {
+                      if (pageInfo.source == 3) {
+                        paraHtml.append(
+                          '<p class="source-04">来源(PaperTime云论文库)</p>'
+                        );
+                      } else {
+                        paraHtml.append(
+                          '<p class="source-04">来源(互联网资源)</p>'
+                        );
+                      }
+                      paraHtml.append(
+                        '<p class="source-04">标题：' + pageInfo.title + "</p>"
+                      );
+                      paraHtml.append(
+                        '<p class="source-04 source-04-02">链接：'
+                      );
+                      paraHtml.append(
+                        '<a class="source-04-01" href="' +
+                          pageInfo.url +
+                          '" target="_blank">'
+                      );
+                      if (pageInfo.url.length > 50) {
+                        paraHtml.append(pageInfo.url.substring(0, 50));
+                      } else {
+                        paraHtml.append(pageInfo.url);
+                      }
+                      paraHtml.append("</a>");
+                      paraHtml.append("</p>");
+                    }
+                  }
+                  paraHtml.append("</li>");
+                }
+                paraHtml.append("</ul>");
+                paraHtml.append("</div>");
+                return;
+              }
+            }
+          }
+        }
+      }
+    };
     this.docCheckId = this.$route.query.docId;
     this.sendId = this.$route.query.senId;
     if ((this.$route.query.status = "1")) {
@@ -98,131 +197,7 @@ export default {
             .then(res => {
               console.log(res);
               var paraHtml = new StringBuffer();
-              for (
-                var i = 0;
-                i < res.data.docResult.paraResultList.length;
-                i++
-              ) {
-                var lastIndex = 0;
-                var para = res.data.docResult.paraResultList[i];
-                if (para.senResultList.length > 0) {
-                  for (var j = 0; j < para.senResultList.length; j++) {
-                    var sen = para.senResultList[j];
-                    lastIndex = sen.endOffset;
-                    // console.log(sen.senId+'----'+this.sendId);
-                    // 添加一个判断 senId  和 router 带过来的是不是一样
-                    if (sen.senId == this.sendId) {
-                      if (sen.simResultList.length > 0) {
-                        this.content = para.content.substring(
-                          sen.startOffset,
-                          sen.endOffset
-                        );
-                        paraHtml.append('<div class="source-div">');
-                        paraHtml.append("<ul>");
-                        for (let si = 0; si < sen.simResultList.length; si++) {
-                          this.contentSimilarity = sen.simResultList.length;
-                          this.xsd = parseFloat(sen.simDegree * 100).toFixed(2);
-                          var sim = sen.simResultList[si];
-                          this.suggest = sen.suggest;
-                          this.simAuto = parseFloat(sen.simAuto * 100).toFixed(
-                            2
-                          );
-                          paraHtml.append("<li  class='source-box'>");
-                          paraHtml.append('<div class="source-01">');
-                          paraHtml.append(
-                            "<span class='num'>" + (si + 1) + "</span>"
-                          );
-                          paraHtml.append(
-                            "<span class='source-title'>相似度</span>"
-                          );
-                          paraHtml.append(
-                            "<span class='red'>" +
-                              (parseFloat(sim.simDegree) * 100).toFixed(2) +
-                              "%</span>"
-                          );
-                          paraHtml.append("</div>");
-                          paraHtml.append(
-                            '<p class="source-02">相似内容片段：</p>'
-                          );
-                          paraHtml.append(
-                            '<p class="source-03">' + sim.simSegment + "</p>"
-                          );
-                          var pageInfo =
-                            res.data.docResult.pageWrapMap[sim.pageId];
-                          if (pageInfo) {
-                            if (pageInfo.source > 0 && pageInfo.source != 3) {
-                              paraHtml.append(
-                                '<p class="source-04">来源(本地数据库)</p>'
-                              );
-                              var titles = pageInfo.title.split("|#|");
-                              paraHtml.append(
-                                '<p class="source-04">篇名：《' +
-                                  titles[0] +
-                                  "》</p>"
-                              );
-                              paraHtml.append(
-                                '<p class="source-04">期刊：《' +
-                                  titles[2] +
-                                  "》</p>"
-                              );
-                              paraHtml.append(
-                                '<p class="source-04">年份： ' +
-                                  titles[3] +
-                                  "</p>"
-                              );
-                              paraHtml.append(
-                                '<p class="source-04">作者： ' +
-                                  titles[1] +
-                                  "</p>"
-                              );
-                            } else {
-                              if (pageInfo.source == 3) {
-                                paraHtml.append(
-                                  '<p class="source-04">来源(PaperTime云论文库)</p>'
-                                );
-                              } else {
-                                paraHtml.append(
-                                  '<p class="source-04">来源(互联网资源)</p>'
-                                );
-                              }
-                              paraHtml.append(
-                                '<p class="source-04">标题：' +
-                                  pageInfo.title +
-                                  "</p>"
-                              );
-                              paraHtml.append(
-                                '<p class="source-04 source-04-02">链接：'
-                              );
-                              paraHtml.append(
-                                '<a class="source-04-01" href="' +
-                                  pageInfo.url +
-                                  '" target="_blank">'
-                              );
-                              if (pageInfo.url.length > 50) {
-                                paraHtml.append(pageInfo.url.substring(0, 50));
-                              } else {
-                                paraHtml.append(pageInfo.url);
-                              }
-                              paraHtml.append("</a>");
-                              paraHtml.append("</p>");
-                            }
-                          }
-                          paraHtml.append("</li>");
-                        }
-                        paraHtml.append("</ul>");
-                        paraHtml.append("</div>");
-                      }
-                    }
-                  }
-                  paraHtml.append(
-                    replaceBlank(
-                      para.content.substring(lastIndex, para.content.length)
-                    )
-                  );
-                } else {
-                  paraHtml.append(replaceBlank(para.content));
-                }
-              }
+              pull(res, this.sendId, paraHtml);
               $(".source-div").html(paraHtml.toString());
               if (this.suggest == null) {
                 this.showSuggest = false;
@@ -323,7 +298,7 @@ export default {
 .btn-box button {
   background: #3b7aca;
   border-radius: 4px;
-  width: 13.33rem;
+  width: 13rem;
   height: 2.5rem;
   color: #fff;
   cursor: pointer;

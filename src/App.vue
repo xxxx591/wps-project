@@ -103,6 +103,7 @@ i {
   color: #888888;
   letter-spacing: 0.28px;
   text-indent: 2em;
+  margin:0 .83rem;
 }
 .icon {
   display: inline-block;

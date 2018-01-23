@@ -62,6 +62,9 @@ export default {
   props: {
     balance: {
       type: Number
+    },
+    docCheckId:{
+      type:String
     }
   },
   methods: {
@@ -71,13 +74,25 @@ export default {
     changeDownload(e) {
       window.ksoJsAsynCall(
         "navigateOnNewWindow",
-        { url: "http://www.papertime.cc/download/task/1516097631675.dl" },
+        {
+          url:
+            "http://wpsapi2357.papertime.cn/v1/paper/download.html?docCheckId=" +
+            this.docCheckId
+        },
         function(res) {
           console.log(res);
         }
       );
     },
-    changeQq(e) {}
+    changeQq(e) {
+      window.ksoJsAsynCall(
+        "navigateOnNewWindow",
+        { url: "http://wpa.b.qq.com/cgi/wpa.php?ln=1&key=XzgwMDgyMzE1OF80NjU0MzFfODAwODIzMTU4XzJf" },
+        function(res) {
+          console.log(res);
+        }
+      );
+    }
   }
 };
 </script>

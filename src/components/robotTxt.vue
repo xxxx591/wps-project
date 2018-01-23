@@ -1,13 +1,13 @@
 <template>
   <div>
-      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
+      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange" :docCheckId="docCheckId"></logo-tab>
       <div class="full-content">
         <div class="btn-box">
           <button class="check-box" @click="DupCheck">实时查重</button>
           <button class="robot-box">降重结果预览</button>
         </div>
           <div class="title-box">
-            <span class="xsd-title">降重后相似度 <span class="xsd">&nbsp;{{xsd}}%</span></span>
+            <span class="xsd-title">降重后相似度：<span class="xsd">{{xsd}}%</span></span>
             <p class="title-box-content">绿色文字表示机器人修改</p>
           </div>
           <div class="full-div">
@@ -94,7 +94,7 @@ export default {
 .btn-box button {
   background: #3b7aca;
   border-radius: 4px;
-  width: 13.33rem;
+  width: 13rem;
   height: 2.5rem;
   color: #fff;
   cursor: pointer;

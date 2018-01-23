@@ -50,6 +50,7 @@ function StringBuffer() {
     }
     return num;
   }
+  
   export {
     StringBuffer,replaceBlank,getMyDate,getzf
   }

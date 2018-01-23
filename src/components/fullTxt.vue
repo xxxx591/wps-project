@@ -1,6 +1,6 @@
 <template>
   <div>
-      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange"></logo-tab>
+      <logo-tab :balance.sync="balance" v-on:returnChange="returnChange" :docCheckId="docCheckId"></logo-tab>
       <div class="full-content">
         <div class="btn-box">
           <button class="check-box" @click="DupCheck">实时查重</button>
@@ -12,7 +12,7 @@
               <span class="content-right" @click="routerTo">相似片段</span>
           </p>
           <div class="title-box">
-            <span class="xsd-title">相似度 <span class="xsd">&nbsp;{{xsd}}%</span></span>
+            <span class="xsd-title">相似度：<span class="xsd">{{xsd}}%</span></span>
             <p class="title-box-content">使用机器人降重降低相似度~~~~~~</p>
           </div>
           <div class="paper-content-box">
@@ -215,7 +215,7 @@ export default {
 .btn-box button {
   background: #3b7aca;
   border-radius: 4px;
-  width: 13.33rem;
+  width: 13rem;
   height: 2.5rem;
   color: #fff;
   cursor: pointer;
@@ -276,6 +276,6 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 19.7rem;
+  padding-right: 10px;
 }
 </style>
