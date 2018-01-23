@@ -53,14 +53,11 @@ export default {
         }
       ],
       panelShow: false,
-      userId: "",
-      wpstoken: null
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken,
     };
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
   },
   components: {
     logo,

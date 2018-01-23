@@ -14,37 +14,24 @@ export default {
   name: "app",
   data() {
     return {
-      userid: "1",
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken,
       docid: "",
       userName: "test",
-      wpstoken: ""
+      fullCheck: this.GLOBAL.fullCheck
     };
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.$http
-      .get("api/v1/check/init.html", {
-        params: {
-          userName: this.userName,
-          userId:this.userid
-        }
-      })
-      .then(res => {
-        console.log(res);
-        store.userId = res.data.userId;
-        store.wpstoken = res.data.wpstoken;
-        this.userId = store.userId;
-        this.wpstoken = store.wpstoken;
-        if (res.data.fullCheck == "0") {
-          this.$router.push({
-            path: "/allCheck"
-          });
-        } else if (res.data.fullCheck == "1") {
-          this.$router.push({
-            path: "/viewReport"
-          });
-        }
+    console.log(this.GLOBAL.wpstoken);
+    if (this.fullCheck == "0") {
+      this.$router.push({
+        path: "/allCheck"
       });
+    } else if (this.fullCheck == "1") {
+      this.$router.push({
+        path: "/viewReport"
+      });
+    }
   }
 };
 </script>
@@ -109,7 +96,7 @@ i {
   text-decoration: underline;
 }
 .ysblue {
-  color: #1d8754!important;
+  color: #1d8754 !important;
 }
 
 .full-div {
@@ -272,7 +259,7 @@ i {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.source-04:last-of-type{
+.source-04:last-of-type {
   margin-bottom: 1.25rem;
 }
 .source-04-02 {

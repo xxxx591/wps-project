@@ -55,16 +55,13 @@ export default {
     }
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
     this.$http
-      .get("api/v1/check/full/init.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/check/full/init.html", {
         params: {
           userId: this.userId,
           title: "让网络成为一种内在的道德享用",
           editorTxt:
-            "摘要:随着网络的迅速发展,互联网在人们的生活中成为了必需品。所以,如何学校应该从各方面培育大学生网络道德。 新媒体丰富了人们的信息资源,扩秩序出现失衡,而网络道德尚未完全形成,各种网络道德失范现象引起了社会的高度关注,网络道德建设的重要性日益凸显。网络在给大学生带来便利的同时,。 "
+            "联网在人们的生活中成为了必需随着网络的迅速发展,互联网在人们的生活中成为了必需随着网络的迅速发展,互联网在人们的生活中成为了必需品。所以,如何学校应该从各方面培育大学生网络道德。 新媒体丰富了人们的信息资源,扩秩序出现失衡,而网络道德尚未完全形成,各种网络道德失范现象引起了社会的高度关注,网络道德建设的重要性日益凸显。网络在给大学生带来便利的同时,。 "
         },
         headers: {
           wpstoken: this.wpstoken,
@@ -103,7 +100,7 @@ export default {
     submit() {
       if (this.balance > this.allNumberWords + this.robotWords) {
         this.$http
-          .get("api/v1/check/full/submit.html", {
+          .get("http://wpsapi2357.papertime.cn/v1/check/full/submit.html", {
             params: {
               userId: this.userId,
               auto: this.auto

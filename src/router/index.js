@@ -11,6 +11,7 @@ import source from '@/components/source'
 Vue.use(Router)
 
 export default new Router({
+  // mode:'history',
   routes: [
     {
       path: '/allCheck',

@@ -62,12 +62,12 @@ export default {
   },
   mounted: function() {
     this.$http
-      .get("api/v1/check/real/init.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/check/real/init.html", {
         params: {
           userId: this.userId,
           docCheckId: this.docCheckId,
           editorTxt:
-            "随着网络的迅速发展,互联网在人们的生活中必需品。所以,如何学校cscscs应该从各方面培育大学生测试测试测试网络道德。 新媒体丰富了人们的信息资源,扩秩序出现,而网络道德尚未完全形成,各种网络道德失范现象引起了社会的高度关注,网络道德建设的重要性日益凸显。网络在给大学生带来便利的同时,。"
+            "随着网络的迅速发展,互联网在人123123123123需品。所以,如何学校cscscs应该从各方面培育大学生测试测试测试网络道德。 新媒体丰富了人们的信息资源,扩秩序出现,而网络道德尚未完全形成,各种网络道德失范现象引起了社会的高度关注,网络道德建设的重要性日益凸显。网络在给大学生带来便利的同时,。"
         },
         headers: {
           wpstoken: this.wpstoken,
@@ -91,7 +91,7 @@ export default {
       if (this.status == "success" && this.balance > this.wordCount) {
         this.show = false;
         this.$http
-          .get("api/v1/check/real/submit.html", {
+          .get("http://wpsapi2357.papertime.cn/v1/check/real/submit.html", {
             params: {
               userId: this.userId,
               docCheckId: this.docCheckId,

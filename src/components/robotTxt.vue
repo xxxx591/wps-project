@@ -26,10 +26,10 @@ export default {
   data() {
     return {
       msg: "全文标红区",
-      userId: null,
-      docCheckId: null,
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken,
       balance: null,
-      wpstoken: null,
+      docCheckId: null,
       panelShow: false,
       xsd: null
     };
@@ -40,14 +40,11 @@ export default {
     currentCost
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
     this.docCheckId = this.$route.query.docId;
     this.balance = this.$route.query.balance;
     var that = this;
     this.$http
-      .get("api/v1/paper/autoPreview.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/paper/autoPreview.html", {
         params: {
           userId: this.userId,
           docCheckId: this.docCheckId

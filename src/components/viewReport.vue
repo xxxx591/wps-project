@@ -33,12 +33,12 @@ export default {
   data() {
     return {
       msg: "你好啊",
-      userId: null,
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken,
       listItem: [],
       pageSize: 10,
       pageNow: 1,
       pageAll: 123,
-      wpstoken: null,
       state: null,
       viewTrue: true,
       n: 0,
@@ -49,11 +49,8 @@ export default {
     logo
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
     this.$http
-      .get("api/v1/paper/checkTaskList.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/paper/checkTaskList.html", {
         params: {
           userId: this.userId,
           pageSize: this.pageSize,
@@ -129,7 +126,7 @@ export default {
       } else {
         this.pageNow -= 1;
         this.$http
-          .get("api/v1/paper/checkTaskList.html", {
+          .get("http://wpsapi2357.papertime.cn/v1/paper/checkTaskList.html", {
             params: {
               userId: this.userId,
               pageSize: this.pageSize,
@@ -176,7 +173,7 @@ export default {
       if (this.pageNow < this.pageAll) {
         this.pageNow += 1;
         this.$http
-          .get("api/v1/paper/checkTaskList.html", {
+          .get("http://wpsapi2357.papertime.cn/v1/paper/checkTaskList.html", {
             params: {
               userId: this.userId,
               pageSize: this.pageSize,

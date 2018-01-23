@@ -10,20 +10,20 @@ module.exports = {
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
     proxyTable: {
-      "/api": {
-        target: "http://47.93.158.239/",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/api": "/"
-        }
-      },
-      "/xyh": {
-        target: "http://192.168.0.168:8080/",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/xyh": "/"
-        }
-      },
+      // "/api": {
+      //   target: "http://wpsapi2357.papertime.cn/",
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     "^/api": "/"
+      //   }
+      // },
+      // "/xyh": {
+      //   target: "http://192.168.0.168:8080/",
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     "^/xyh": "/"
+      //   }
+      // },
 
     },
     // Various Dev Server settings

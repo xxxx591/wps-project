@@ -7,6 +7,9 @@ import $ from 'jquery'
 import axios from 'axios' 
 import base64 from "./state/base64";
 import kso from "./state/kso";
+import global_ from './Global'//引用文件
+Vue.prototype.GLOBAL = global_//挂载到Vue实例上面
+
 
 Vue.prototype.$http=axios  
 Vue.config.productionTip = false

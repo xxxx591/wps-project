@@ -49,15 +49,15 @@ export default {
   data() {
     return {
       msg: "全文标红区",
-      userId: null,
-      docCheckId: null,
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken,
       balance: null,
-      wpstoken: null,
       sendId: null,
       listItem: [],
       pageSize: 10,
       pageNow: 1,
       pageAll: null,
+      docCheckId: null,
       n: 0,
       s: 0,
       cut: true,
@@ -69,9 +69,6 @@ export default {
     currentCost
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
     this.docCheckId = this.$route.query.docCheckId;
     this.balance = this.$route.query.balance;
     this.sendId = this.$route.query.senId;
@@ -79,7 +76,7 @@ export default {
       this.cut = !this.cut;
     }
     this.$http
-      .get("api/v1/paper/loadSegment.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/paper/loadSegment.html", {
         params: {
           docCheckId: this.docCheckId,
           pageNow: this.pageNow,
@@ -92,6 +89,7 @@ export default {
       })
       .then(res => {
         var sen = res.data.segment;
+        console.log(res);
         for (let i = 0; i < sen.length; i++) {
           this.listItem.push({
             segment: sen[i].segment,
@@ -135,7 +133,7 @@ export default {
       if (this.pageNow < this.pageAll) {
         this.pageNow += 1;
         this.$http
-          .get("api/v1/paper/loadSegment.html", {
+          .get("http://wpsapi2357.papertime.cn/v1/paper/loadSegment.html", {
             params: {
               docCheckId: this.docCheckId,
               pageNow: this.pageNow,
@@ -186,7 +184,7 @@ export default {
       } else {
         this.pageNow -= 1;
         this.$http
-          .get("api/v1/paper/loadSegment.html", {
+          .get("http://wpsapi2357.papertime.cn/v1/paper/loadSegment.html", {
             params: {
               docCheckId: this.docCheckId,
               pageNow: this.pageNow,

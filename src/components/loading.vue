@@ -18,8 +18,8 @@ export default {
       istrue: true,
       isfalse: false,
       docCheckId: null,
-      userId: null,
-      wpstoken: null
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken
     };
   },
   components: {
@@ -29,13 +29,10 @@ export default {
   beforeMount: function() {},
   mounted: function() {
     this.docCheckId = this.$route.query.docCheckId;
-    console.log(this.docCheckId);
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
     var that = this;
     let i = setInterval(data => {
-      that.$http("api/v1/check/status.html", {
+      that
+        .$http("http://wpsapi2357.papertime.cn/v1/check/status.html", {
           params: {
             docCheckId: that.docCheckId
           },

@@ -1,25 +1,24 @@
 
-const obj = {
-  userId : '',
-  wpstoken : '',
-}
+var obj ;
 
 function userid(userid,tokenid) {
   $.ajax({
     type: "get",
-    url: "api/v1/check/init.html",
+    url: "http://wpsapi2357.papertime.cn/v1/check/init.html",
     data: {
-      uuid: 'test',
+      userName: 'test',
+      userId:'1'
     },
     dataType: "json",
     success: res => {
-      // console.log(res);
-      obj.userId = res.userId;
-      obj.wpstoken = res.wpstoken;
-      // console.log(obj);
+      console.log(res);
+      obj = res.userId;
     }
   });
+  console.log(obj);
 }
+userid();
+console.log(obj);
 export {
   obj,userid
 }

@@ -18,7 +18,7 @@
           <div class="paper-content-box">
           </div>
       </div>
-      <robot-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:submitChange="submitChange" :docCheckId="docCheckId"></robot-cost>
+      <robot-cost :panelShow02.sync="panelShow02" v-if="panelShow02" :userId="userId" :wpstoken="wpstoken" v-on:submitChange="submitChange" :docCheckId="docCheckId"></robot-cost>
       <current-cost :panelShow.sync="panelShow" v-if="panelShow" :userId="userId" :wpstoken="wpstoken" v-on:DupChange="DupChange" :docCheckId="docCheckId"></current-cost>
   </div>
 </template>
@@ -32,15 +32,16 @@ export default {
   data() {
     return {
       msg: "全文标红区",
-      userId: null,
+      userId: this.GLOBAL.userId,
+      wpstoken: this.GLOBAL.wpstoken,
       docCheckId: null,
       balance: null,
-      wpstoken: null,
       xsd: null,
       reviseStatus: "",
       status: "",
       cut: true,
-      panelShow: false
+      panelShow: false,
+      panelShow02: false
     };
   },
   components: {
@@ -49,13 +50,10 @@ export default {
     currentCost
   },
   mounted: function() {
-    var store = window.sessionStorage;
-    this.userId = store.userId;
-    this.wpstoken = store.wpstoken;
     this.docCheckId = this.$route.query.docCheckId;
     var that = this;
     this.$http
-      .get("api/v1/paper/index.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/paper/index.html", {
         params: {
           userId: this.userId,
           docCheckId: this.docCheckId
@@ -78,7 +76,7 @@ export default {
           res.data.status == "success"
         ) {
           this.$http
-            .get("api/v1/paper/loadData.html", {
+            .get("http://wpsapi2357.papertime.cn/v1/paper/loadData.html", {
               params: {
                 userId: this.userId,
                 docCheckId: this.$route.query.docCheckId
@@ -182,10 +180,10 @@ export default {
       });
     },
     robotCost() {
-      this.panelShow = !this.panelShow;
+      this.panelShow02 = !this.panelShow02;
     },
     submitChange(data) {
-      this.panelShow = !this.panelShow;
+      this.panelShow02 = !this.panelShow02;
       this.$router.push({
         path: "/robotTxt",
         query: { docId: this.docCheckId ,balance:this.balance}

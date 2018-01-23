@@ -1,4 +1,4 @@
-<template v-show="panelShow">
+<template v-show="panelShow02">
   <div>
     <div class="cost-box">
       <h3>该服务由PaperTime提供</h3>
@@ -47,7 +47,7 @@ export default {
     };
   },
   props: {
-    panelShow: {
+    panelShow02: {
       type: Boolean
     },
     userId: {
@@ -63,7 +63,7 @@ export default {
   methods: {
     hidePanel() {
       // 下面的语句配合开头写的 .sync 就会更新父组件中的 panelShow 变量
-      this.$emit("update:panelShow", false);
+      this.$emit("update:panelShow02", false);
     },
     submit() {
       if (
@@ -72,7 +72,7 @@ export default {
         ) {
           this.show = false;
           this.$http
-            .get("api/v1/check/auto/submit.html", {
+            .get("http://wpsapi2357.papertime.cn/v1/check/auto/submit.html", {
               params: {
                 userId: this.userId,
                 docCheckId: this.docCheckId
@@ -94,7 +94,7 @@ export default {
   mounted: function() {
     console.log(this.docCheckId);
     this.$http
-      .get("api/v1/check/auto/init.html", {
+      .get("http://wpsapi2357.papertime.cn/v1/check/auto/init.html", {
         params: {
           userId: this.userId,
           docCheckId: this.docCheckId
