@@ -155,6 +155,6 @@ export default {
   border-radius: 2px;
   text-indent: 1.23rem;
   display: inline-block;
-  width: 16.65rem;
+  padding-right: 10px;
 }
 </style>

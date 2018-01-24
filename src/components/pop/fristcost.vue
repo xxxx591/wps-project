@@ -1,4 +1,4 @@
-<template v-show="panelShow">
+<template>
   <div>
     <div class="cost-box">
       <h3>该服务由PaperTime提供</h3>
@@ -40,19 +40,15 @@ export default {
       select: "icon-select-input",
       show: true,
       auto: 1,
-      showBalance:true,
+      showBalance: true,
+      wpstoken: null,
+      userId: null
     };
   },
-  props: {
-    panelShow: {
-      type: Boolean
-    },
-    userId: {
-      type: String
-    },
-    wpstoken: {
-      type: String
-    }
+  beforeMount: function() {
+    this.userId = this.$route.query.userId;
+    this.wpstoken = this.$route.query.wpstoken;
+    console.log(this.wpstoken);
   },
   mounted: function() {
     this.$http
@@ -60,17 +56,11 @@ export default {
         params: {
           userId: this.userId,
           title: "让网络成为一种内在的道德享用",
-          editorTxt:
-            "联网在人们的生活中成为了必需随着网络的迅速发展,互联网在人们的生活中成为了必需随着网络的迅速发展,互联网在人们的生活中成为了必需品。所以,如何学校应该从各方面培育大学生网络道德。 新媒体丰富了人们的信息资源,扩秩序出现失衡,而网络道德尚未完全形成,各种网络道德失范现象引起了社会的高度关注,网络道德建设的重要性日益凸显。网络在给大学生带来便利的同时,。 "
-        },
-        headers: {
-          wpstoken: this.wpstoken,
-          userId: this.userId
+          editorTxt: "网 "
         }
       })
       .then(res => {
         console.log(res);
-        console.log(this.wpstoken);
         if (res.data.status == "fail") {
           this.msg = "论文内容为空, 不能全文查重";
           this.show = false;
@@ -94,8 +84,9 @@ export default {
       }
     },
     hidePanel() {
-      // 下面的语句配合开头写的 .sync 就会更新父组件中的 panelShow 变量
-      this.$emit("update:panelShow", false);
+      window.ksoJsAsynCall("closeNavigate", function(res) {
+        console.log(res);
+      });
     },
     submit() {
       if (this.balance > this.allNumberWords + this.robotWords) {
@@ -104,19 +95,26 @@ export default {
             params: {
               userId: this.userId,
               auto: this.auto
-            },
-            headers: {
-              wpstoken: this.wpstoken,
-              userId: this.userId
             }
           })
           .then(res => {
             console.log(res);
             if (res.data.status == "success") {
-              this.$emit("submitChange", res.data.docCheckId);
+              window.ksoJsAsynCall(
+                "notifyToWidget",
+                {
+                  docId: res.data.docCheckId
+                },
+                function(res) {
+                  console.log(res);
+                }
+              ); // 触发回调函数
+              window.ksoJsAsynCall("closeNavigate", function(res) {
+                console.log(res);
+              });
             }
           });
-      }else{
+      } else {
         this.showBalance = !this.showBalance;
       }
     }

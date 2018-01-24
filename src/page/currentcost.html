@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<link rel="stylesheet" href="./css/style.css">
+<style>
+  .img-box {
+    text-align: center;
+  }
+
+</style>
+
+<body>
+  <div id="app">
+    <div>
+      <div class="cost-box">
+        <h3>该服务由PaperTime提供</h3>
+        <div class="cost-content" v-if="show">
+          <p class="balance">
+            <span class="left-content"> 检测需扣除您的余额字数，是否继续？</span>
+          </p>
+          <div class="cost-list">
+            <ul>
+              <li>当前修改句子的字数
+                <span class="right-content red-content">{{wordCount}}
+                  <span style="color:#888;">字</span>
+                </span>
+              </li>
+              <li>需扣除字数
+                <span class="right-content red-content">{{wordCount}}
+                  <span style="color:#888;">字</span>
+                </span>
+              </li>
+              <li>余额字数
+                <span class="right-content red-content">{{balance}}
+                  <span style="color:#888;">字</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <p class="remind-content" v-if="showBalance">
+            <i class="icon icon-remind"></i> 此次提交扣费
+            <span class="red-content">{{wordCount}}</span>字，您的余额
+            <span class="red-content">{{balance}}</span>字。</p>
+          <p class="remind-content" v-else>
+            <i class="icon icon-remind"></i> 您的余额不足，请充值</p>
+        </div>
+        <p class="img-box" v-else>
+          <img src="../../assets/loading.gif" alt="" srcset="">
+        </p>
+        <div class="boder-solid"></div>
+        <p class="green-content"> 实时查重
+          <span class="red-content">计费标准</span>：根据当前修改的句子（标记成蓝色）的字数计费.</p>
+        <div class="btn-box">
+          <a href="javascript:;" class="btn btn-cancel" @click="hidePanel">取消</a>
+          <a href="javascript:;" class="btn btn-success" @click="submit" v-if="showBalance">确定</a>
+          <a href="javascript:;" class="btn btn-success" v-else>充值</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="./js/vue.min.js"></script>
+<script src="./js/jquery.min.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    data: {
+      msg: "第一次全文查重",
+      balance: null,
+      allNumberWords: null,
+      robotWords: null,
+      select: "icon-select-input",
+      show: true,
+      auto: 1,
+      showBalance: true,
+      wordCount: null
+    },
+    methods: {
+      hidePanel() {
+        console.log(1);
+      },
+      change() {
+        if (this.select == "icon-select-input") {
+          this.select = "icon-input";
+          this.robotWords = 0;
+          this.auto = 0;
+        } else {
+          this.select = "icon-select-input";
+          this.robotWords = this.allNumberWords;
+          this.auto = 1;
+        }
+      },
+      submit() {
+        if (this.balance > this.allNumberWords + this.robotWords) {
+          this.$http
+            .get("http://wpsapi2357.papertime.cn/v1/check/full/submit.html", {
+              params: {
+                userId: this.userId,
+                auto: this.auto
+              },
+              headers: {
+                wpstoken: this.wpstoken,
+                userId: this.userId
+              }
+            })
+            .then(res => {
+              console.log(res);
+              if (res.data.status == "success") {
+                this.$emit("submitChange", res.data.docCheckId);
+              }
+            });
+        } else {
+          this.showBalance = !this.showBalance;
+        }
+      }
+    }
+  })
+
+</script>
+
+</html>

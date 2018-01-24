@@ -61,6 +61,7 @@ export default {
         }
       })
       .then(res => {
+        console.log(res);
         this.pageAll = parseInt(res.data.page.totalRow / 10 + 1);
         console.log(res);
         for (let i = 0; i < res.data.list.length; i++) {

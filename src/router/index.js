@@ -7,15 +7,22 @@ import fullTxt from '@/components/fullTxt'
 import robotTxt from '@/components/robotTxt'
 import fragment from '@/components/fragment'
 import source from '@/components/source'
+import fristcost from '@/components/pop/fristcost'
 
 Vue.use(Router)
 
 export default new Router({
   // mode:'history',
   routes: [
+
     {
       path: '/allCheck',
       name: 'allCheck',
+      component: allCheck
+    },
+    {
+      path: '/',
+      name: '',
       component: allCheck
     },
     {
@@ -48,6 +55,11 @@ export default new Router({
       name: 'fragment',
       component: fragment
     },
-  
+    {
+      path: '/fristcost',
+      name: 'fristcost',
+      component: fristcost
+    },
+    
   ]
 })

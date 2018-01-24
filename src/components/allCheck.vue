@@ -28,7 +28,10 @@
 <script>
 import logo from "@/components/logo/logo";
 import fristCost from "@/components/pop/fristcost";
-
+function onNotifyToWidget(data) {
+  var r = JSON.parse(window.Base64.decode(data));
+  console.log(r); //弹窗后的回调函数
+}
 export default {
   name: "HelloWorld",
   data() {
@@ -54,30 +57,23 @@ export default {
       ],
       panelShow: false,
       userId: this.GLOBAL.userId,
-      wpstoken: this.GLOBAL.wpstoken,
+      wpstoken: this.GLOBAL.wpstoken
     };
   },
-  mounted: function() {
-  },
+  mounted: function() {},
   components: {
     logo,
     fristCost
   },
   methods: {
     showbox() {
-      this.panelShow = true;
-      console.log(this.userId);
-      window.ksoJsAsynCall("readText", {}, function(res) {
+      window.ksoJsAsynCall("login", { loginSrc: "user_name" }, function(res) {
         console.log(res);
-      });
-    },
-    submitChange(data) {
-      this.$router.push({
-        path: "/loading",
-        query: {
-          docCheckId: data
-        }
-      });
+      }); //登录弹窗页面
+      // userStateChanged();
+      console.log("开始打印");
+      console.log(window);
+      console.log("打印结束");
     }
   }
 };

@@ -92,7 +92,7 @@ export default {
                   paraHtml.append("<span class='num'>" + (si + 1) + "</span>");
                   paraHtml.append("<span class='source-title'>相似度</span>");
                   paraHtml.append(
-                    "<span class='red'>" +
+                    "<span class='colors'>" +
                       (parseFloat(sim.simDegree) * 100).toFixed(2) +
                       "%</span>"
                   );
